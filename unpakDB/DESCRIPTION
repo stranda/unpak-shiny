@@ -1,0 +1,10 @@
+Package: unpakDB
+Type: Package
+Title: Database operations for unpak DB
+Version: 1.0
+Date: 2013-03-25
+Depends: RMySQL,reshape
+Author: AE Strand
+Maintainer: Allan Strand <stranda@cofc.edu>
+Description: Database operations and statistical summaries for R
+License: NotSureYet

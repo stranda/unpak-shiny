@@ -1,0 +1,119 @@
+require(unpakDB)
+source("../../data/const.R")
+con <- db.get.con()
+con <- unpak.get.con()
+dbGetQuery(con,"SELECT * FROM Experiment")
+tmp <- dbGetQuery(con."SELECT * FROM Observation")
+tmp <- dbGetQuery(con,"SELECT * FROM Observation")
+dim(tmp)
+tmp[1:10,]
+dbGetQuery(con,"SELECT * FROM Experiment")
+dbGetQuery(con,"SELECT * FROM Experiment")[,c(1,2,7)]
+dbGetQuery(con,"UPDATE Observation SET Treatment_idTreatment=1 WHERE Experiment_idExperiment=1")
+names(tmp)
+dbGetQuery(con,"UPDATE Observation SET Treatment_idTreatment=1 WHERE IndividualPlant_Experiment_idExperiment=1")
+dbGetQuery(con,"SELECT * FROM Experiment")[,c(1,2,7)]
+dbGetQuery(con,"UPDATE Observation SET Treatment_idTreatment=1 WHERE IndividualPlant_Experiment_idExperiment=2")
+dbGetQuery(con,"UPDATE Observation SET Treatment_idTreatment=2 WHERE IndividualPlant_Experiment_idExperiment=6")
+dbGetQuery(con,"UPDATE Observation SET Treatment_idTreatment=3 WHERE IndividualPlant_Experiment_idExperiment=7")
+dbGetQuery(con,"UPDATE Observation SET Treatment_idTreatment=4 WHERE IndividualPlant_Experiment_idExperiment=8")
+tmp <- dbGetQuery(con,"SELECT * FROM Observation")
+tmp[1:10,]
+tmp[1:10,c(tmp$Treatment_idTreatment)]
+dbGetQuery(con,"SELECT * FROM Experiment")[,c(1,2,7)]
+dbGetQuery(con,"UPDATE Observation SET IndividualPlant_Experiment_idExperiment=2 WHERE Treatment_idTreatment=2")
+source("../../data/const.R")
+require(unpakDB)
+con <- db.get.con()
+con <- unpak.get.con()
+tmp <- dbGetQuery(con,"SELECT * FROM  IndividualPlant")
+dim(tmp)
+names(tmp)
+tmp$oldexp
+names(tmp)
+dbGetQuery(con,"UPDATE IndividualPlant SET oldexp=Experiment_idExperiment")
+tmp$oldexp
+tmp <- dbGetQuery(con,"SELECT * FROM  IndividualPlant")
+tmp$oldexp
+dbGetQuery(con,"SELECT * FROM Experiment")[,c(1,2,7)]
+dbGetQuery(con,"UPDATE IndividualPlant SET newexp=1 WHERE Experiment_idExperiment=1")
+dbGetQuery(con,"UPDATE IndividualPlant SET newexp=2 WHERE Experiment_idExperiment=2")
+dbGetQuery(con,"UPDATE IndividualPlant SET newexp=2 WHERE Experiment_idExperiment=6")
+dbGetQuery(con,"UPDATE IndividualPlant SET newexp=2 WHERE Experiment_idExperiment=7")
+dbGetQuery(con,"UPDATE IndividualPlant SET newexp=3 WHERE Experiment_idExperiment=7")
+tmp <- dbGetQuery(con,"SELECT * FROM  IndividualPlant")
+names(tmp
+)
+tmp$newexp
+tmp$newexp
+tmp[,c("newexp","oldexp")]
+dbGetQuery(con,"UPDATE IndividualPlant SET newexp=2 WHERE Experiment_idExperiment=7")
+dbGetQuery(con,"UPDATE IndividualPlant SET newexp=3 WHERE Experiment_idExperiment=8")
+dbGetQuery(con,"SELECT * FROM Experiment")[,c(1,2,7)]
+dbGetQuery(con,"SELECT * FROM Experiment")[,]
+tmp <- dbGetQuery(con,"SELECT * FROM  IndividualPlant")
+>tmp <- dbGetQuery(con,"SELECT * FROM  IndividualPlant")
+tmp <- dbGetQuery(con,"SELECT * FROM  IndividualPlant")
+tmp[,c("newexp","oldexp")]
+obs <- dbGetQuery(con,"SELECT * FROM Observation")
+obs[1:10,]
+obs <- dbGetQuery(con,"SELECT * FROM Treatment")
+obs <- dbGetQuery(con,"SELECT * FROM Observation")
+ dbGetQuery(con,"SELECT * FROM Treatment")
+table(obs$idTreatment)
+obs
+table(obs$TReatment_idTreatment)
+table(obs$Treatment_idTreatment)
+dim(obs)
+names(obs)
+tmp <- dbGetQuery(con,"SELECT * FROM  IndividualPlant")
+ip <- dbGetQuery(con,"SELECT * FROM  IndividualPlant")
+names(ip)
+ip$newexp
+unique(ip$newexp)
+dbGetQuery(con,"UPDATE IndividualPlant SET Experiment_idExperiment=newexp ")
+con <- unpak.get.con()
+require(unpakDB)
+con <- unpak.get.con()
+source("../../data/const.R")
+con <- unpak.get.con()
+ip <- dbGetQuery(con,"SELECT * FROM  IndividualPlant")
+ip$Experiment_idExperiment
+ip <- dbGetQuery(con,"SELECT * FROM  IndividualPlant")
+ip
+ip[1:100,]
+names(ip[1:100,])
+names(ip[1:100,c(3,6)])
+ip[1:100,c(3,6)])
+ip[1:100,c(3,6)]
+table(ip[,c(3,6)])
+ip <- dbGetQuery(con,"SELECT * FROM  IndividualPlant")
+names(ip)
+ipa <- dbGetQuery(con,"SELECT * FROM  IndividualPlant_has_Accession")
+ipa
+ipa[1:100,1:10]
+ipa[1:100,1:3]
+names(ipa)
+ipa <- dbGetQuery(con,"SELECT * FROM  IndividualPlant_has_Accession")
+ipa[1:100,1:3]
+names(ipa)
+ipa[,4]
+dbGetQuery(con,"Insert into IndividualPlant_has_Accession(IndividualPlant_Experiment_idExperiment)
+select Experiment_idExperiment FROM IndividualPlant")
+names(dbGetQuery(con,"SELECT * FROM IndividualPlant_has_Accession"))
+dbGetQuery(con,"Insert into IndividualPlant_has_Accession(IndividualPlant_Experiment_idExperiment)
+select Experiment_idExperiment FROM IndividualPlant")
+dbGetQuery(con,"Insert into IndividualPlant_has_Accession(IndividualPlant_Experiment_idExperiemnt)
+select Experiment_idExperiment FROM IndividualPlant")
+require(unpakDB)
+source("../../data/const.R")
+con <- unpak.get.con()
+csvfile
+q()
+y
+require(unpakDB)
+source("../../data/const.R")
+con <- unpak.get.con()
+csvfile
+q()
+y

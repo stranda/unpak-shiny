@@ -1,0 +1,2 @@
+tmp <- dbGetQuery(con,"UPDATE Observation SET Treatment_idTreatment=1 WHERE Treatment_idTreatment = 4")
+getwd()

@@ -1,0 +1,10 @@
+Package: unpakR
+Type: Package
+Title: R functions for unpak
+Version: 1.0
+Date: 2013-03-25
+Depends: unpakDB,reshape
+Author: AE Strand
+Maintainer: Allan Strand <stranda@cofc.edu>
+Description: R functions for unpak system
+License: NotSureYet

@@ -1,0 +1,306 @@
+require(unpakR)
+db.host <- "localhost"
+con <- unpak.get.con()
+db.user <- "unpak-R"
+db.passwd <- "arabidopsis"
+con <- unpak.get.con()
+unpak.tables(con)
+tables <- unpak.db.structure(con)
+tables$Accession
+dbReadTable(con,"Accession")
+tmp <- dbReadTable(con,"Accession")
+dim(tmp)
+names(tmp)
+unpak.example.query
+which.row <- function(con,table="Accession",field="idAccession",match="SALK_CS60000")
+which.row <- function(con,table="Accession",field="idAccession",match="SALK_CS60000")
+
+paste("SELECT",field,"FROM",table,"WHERE",field,"IN ('",paste(match,collapse=','),")")
+which.row
+match=c("SALK_CS60000","SALK_152970C")
+paste("SELECT ",field," FROM ",table," WHERE ",field," IN ('",paste(match,collapse="','"),"')",sep="")
+match="SALK_CS60000"
+match="monkey"
+dbGetQuery(con,paste("SELECT ",field," FROM ",table," WHERE ",field," IN ('",paste(match,collapse="','"),"')",sep=""))
+dim(df)[1]
+which.row
+which.row()
+which.row(con)
+which.row(con,match="dog")
+tmp <- which.row(con)
+tmp[NA]
+tmp
+tmp[NULL]
+tables$Facility
+table
+rm (table)
+table
+dbGetQuery(con,"SELECT * FROM Facilities")
+dbGetQuery(con,"SELECT * FROM Facility")
+dbGetQuery(con,"SELECT * FROM Institution")
+dbGetQuery(con,"SELECT * FROM Facility")
+names(dbGetQuery(con,"SELECT * FROM Facility"))
+dbGetQuery(con,"SELECT * FROM Institution")
+which.row(con, "Facility","name",facility))
+facility <- "OGH"
+names(dbGetQuery(con,"SELECT * FROM Facility"))
+dbGetQuery(con,"SELECT * FROM Facility")
+facility <- "OGH-COFC"
+which.row(con, "Facility","name",facility))
+which.row(con, "Facility","name",facility)
+is.null(which.row(con, "Facility","name",facility))
+)
+)
+paste("SELECT idInstitution FROM Institution WHERE name='",institution"'",sep="")
+institution="College of Charleston"
+inst.id
+unlist(inst.id)
+tables$Facility
+fac.ids
+next.fac
+unpak.db.structure(con)$Facility
+unpak.db.structure(con)$Facility$fields
+paste(unpak.db.structure(con)$Facility$fields,collapse=",")
+paste(unpak.db.structure(con)$Facility$fields,collapse=", ")
+str(dbGetQuery(con,"SELECT * FROM Facility"))
+tables$Facility
+              paste("insert into Facility (",paste(unpak.db.structure(con)$Facility$fields,collapse=", "),
+                    ") values (",next.fac,",",inst.id,",",singlequote(facility),",",singlequote(description),",",
+                    size,",",active,",",singlequote(location),",",singlequote(type),")",sep="")
+facility="NGH-COFC"
+description="New Greenhouse"
+size=1500
+location <- "3rd floor new science center"
+insert.facility(con,facility="NGH-COFC",description="New Greenhouse",size=1500,location = "3rd floor new science center")
+(dbGetQuery(con,"SELECT * FROM Facility"))
+df <- iris
+dtr(df)
+str(df)
+names(str(df))
+args(str)
+a <- integer(1)
+a
+a <- integer(2)
+a
+a <- as.integer(1)
+a
+is.numeric(a)
+df[,factor]
+apply(df[,factor],1,as.character(x))
+apply(df[,factor],1,as.character)
+apply(df[,factor],2,as.character)
+sapply(df[,factor],as.character)
+factor
+factor[5] <- F
+factor
+df
+str(df)
+str(df)
+character
+)
+tmp <-  t(apply(df,1,function(x)
+              {
+                l <- length(character)
+                sapply(1:l,function(i)
+                       {
+                         paste(consingquote(x[i],character[i]))
+                       })
+tmp <-  t(apply(df,1,function(x)
+              {
+                l <- length(character)
+                sapply(1:l,function(i)
+                       {
+                         paste(consingquote(x[i],character[i]))
+                       })
+              }))
+tmp[1,]
+paste(tmp[1,],collapse=", ")
+vals <- apply(
+      t(apply(df,1,function(x)
+              {
+                l <- length(character)
+                sapply(1:l,function(i)
+                       {
+                         paste(consingquote(x[i],character[i]))
+                       })
+              }))
+      ),2,function(y){paste(y,collapse=", "))
+vals
+vals[1,]
+vals[1]
+vals
+paste("(",vals,")",sep="")
+paste(paste("(",vals,")",sep=""),collapse=',')
+paste(paste("(",vals,")",sep=""),collapse=',')
+table2values(dbGetQuery(con,"SELECT * FROM Facility"))
+ls()
+save(file="../data/db.ids.rda",db.host,db.user,db.passwd)
+con <- unpak.get.con90
+con <- unpak.get.con()
+table2values(dbGetQuery(con,"SELECT * FROM Facility"))
+table2values(iris[1,])
+dbGetQuery(con,"SELECT * FROM Institution")
+dbGetQuery(con,"SELECT * FROM Institution")
+insert.institution()
+insert.institution(con)
+insert.institution(con,institution="dummy")
+insert.institution(con,institution="dummy",description="dummy institution",abbreviation="dumm")
+insert.institution(con,institution="dummy",description="dummy institution",abbreviation="dumm")
+dbGetQuery(con,"SELECT * FROM Institution")
+dbGetQuery(con,"SELECT * FROM Facility")
+dbGetQuery(con,"SELECT * FROM Institution")
+insert.facility(con,facility="BC-GC1",description="Barnard Growth Chamber 1",institution="Barnard College",type="growthchamber")
+insert.facility
+insert.facility(con,facility="BC-GC1",description="Barnard Growth Chamber 1",institution="Barnard College",type="growthchamber")
+insert.facility(con,facility="BC-GC1",description="Barnard Growth Chamber 1",institution="Barnard College",type="growthchamber")
+ fac.ids <-
+                as.numeric((dbGetQuery(con,paste("SELECT idFacility FROM Facility"))))
+fac.ids
+str(fac.ids)
+insert.facility(con,facility="BC-GC1",description="Barnard Growth Chamber 1",institution="Barnard College",type="growthchamber")
+dbGetQuery(con,"SELECT * FROM Facility")
+insert.facility(con,facility="COFC-GC1",description="CofC Growth Chamber 1",type="growthchamber")
+insert.facility(con,facility="COFC-GC2",description="CofC Growth Chamber 2",type="growthchamber")
+names(tables)
+tables$Gene
+tables$Gene_has_Accession
+dbGetQuery(con,"SELECT * FROM Gene_has_Accession")
+names(tables)
+dbGetQuery(con,"SELECT * FROM IndividualPlant_has_Accession")
+names(tables)
+dbGetQuery(con,"SELECT * FROM Treatment")
+treat,id
+treat.id
+insert.treatment(con,treat="Standard GC",description="Standard conditions in Growth chamber (used in exp 1a)")
+insert.treatment(con,treat="Standard GC",description="Standard conditions in Growth chamber (used in exp 1a)")
+insert.treatment(con,treat="Standard GC",description="Standard conditions in Growth chamber (used in exp 1a)")
+insert.treatment(con,treat="Standard GC",description="Standard conditions in Growth chamber (used in exp 1a)")
+dbGetQuery(con,"SELECT * FROM Treatment")
+dbGetQuery(con,"SELECT * FROM Experiment")
+insert.experiment(con,experiment="1a",description="Experiment 1a, first exp proposed for UnPAK",startDate="2011-09-01",endDate="2011-11-01",embargoed=1,treatment="Standard GC")
+insert.experiment(con,experiment="1a",description="Experiment 1a, first exp proposed for UnPAK",startDate="2011-09-01",endDate="2011-11-01",embargoed=1,treatment="Standard GC")
+tables$IndividualPlant
+tmp <- dbGetQuery(con,"SELECT * FROM IndividualPlant")
+sim(tmp)
+dim(tmp)
+tmp[1:10,]
+names(tables)
+tmp <- dbGetQuery(con,"SELECT * FROM IndividualPlant_has_Accession")
+tmp
+tmp <- dbGetQuery(con,"SELECT * FROM IndividualPlant_has_Accession")
+tmp[1:L10,]
+tmp[1:10,]
+q()
+n
+library(unpakR)
+source("../data/const.R")
+ls()
+con <- unpak.get.con()
+source("../data/const.R")
+con <- unpak.get.con()
+library(unpakR)
+con <- unpak.get.con()
+tables <- unpak.db.structure(con)
+insert.institution
+fpath
+names(mega)
+comments
+comments
+comments
+names(mega)
+maxplantnum
+dim(mega)
+which.rows
+which.row
+which.row(con,"IndividualPlant","idIndividualPlant",1)
+which.row(con,"IndividualPlant","idIndividualPlant",c(1,3,18))
+which.match(con,"IndividualPlant","idIndividualPlant",c(1,3,18))
+which.match(con,"IndividualPlant","idIndividualPlant",c(1,3,18,1386))
+?stop
+?error
+matched.access
+names(mega)
+errcode=0
+matched.experiment
+names(mega)
+ins
+sqlquery
+cl <- ins
+nms
+factor
+character
+character
+vals <- paste("('",vals,"')")
+vals <- paste("('",cl[,1],"')")
+vals
+vals <- paste(paste("('",cl[,1],"')"),collapse=", ")
+vals
+vals <- paste(paste("('",cl[,1],"')",sep=T),collapse=", ")
+vals <- paste(paste("('",cl[,1],"')",sep=""),collapse=", ")
+vals
+vals <- paste("(",paste(paste("('",cl[,1],"')",sep=""),collapse=", "),")")
+vals
+column2values(ins)
+ins
+sqlquery
+sqlquery
+sqlquery
+sqlquery
+length(matched.access)<dim(mega)[1]
+names(mega)
+mega$plantnum
+errcode <- 0
+names(mega)
+dim(megalong)
+names(megalong)
+dbGetQuery("SELECT * FROM Phenotype")
+dbGetQuery("alter table Phenotype modify description VARCHAR(1000)")
+dbGetQuery(con,"alter table Phenotype modify description VARCHAR(1000)")
+dbGetQuery("SELECT * FROM Phenotype")
+dbGetQuery(con,"SELECT * FROM Phenotype")
+dbGetQuery(con,"SELECT * FROM Phenotype")
+unique(megalong$variable)
+insert.phenotype(con,"days.to.bolt","Number of days from germination to bolting","days")
+library(unpakR)
+con <- unpak.get.con()
+source("../data/const.R")
+con <- unpak.get.con()
+require(unpakR)
+source("../data/const.R")
+con <- unpak.get.con()
+unique(megalong$variable)
+insert.phenotype(con,"days.to.bolt","Number of days between germination and bolting","days")
+insert.phenotype(con,"days.to.bolt","Number of days between germination and bolting","days")
+source("../data/const.R")
+require(unpakR);con <- unpak.get.con()
+dbGetQuery(con,"SELECT name FROM Phenotype")
+q()
+y
+require(unpakR);con <- unpak.get.con()
+dbGetQuery(con,"SELECT name FROM Phenotype")
+exp2
+exp2
+str(exp2)
+str(exp2)
+names(exp2)
+names(exp2.long)
+exp2.long[,c(2,5)]
+names(exp2.long)
+insert_accession=FALSE
+str(exp2.long)
+q()
+y
+require(unpakR);con <- unpak.get.con()
+dbGetQuery(con,"SELECT * FROM Accession WHERE idAccession like '22594'")
+dbGetQuery(con,"SELECT * FROM Accession WHERE idAccession like '22631'")
+str(exp2.long)
+errcode
+errcode=0
+str(exp2.long)
+exp2.long$variable
+names(exp2.long)
+dim(exp2.long)
+dim(exp2.long)
+names(exp2.long)
+q()
+y
