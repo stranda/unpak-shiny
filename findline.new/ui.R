@@ -26,7 +26,8 @@ shinyUI(
         mainPanel(
           htmlOutput("msg"),
           downloadLink('downloadPDF','Download PNG of plot below'),
-          plotOutput('hist')
+          plotOutput('hist', height = 800),
+          plotOutput('test')
         ), 
       # Close Sidebar Layout
       )

@@ -1,8 +1,8 @@
 library(shiny)
 library(xtable)
-library(unpakR)
 library(reshape)
 library(RMySQL)
+library(dplyr)
 
 options(bitmapType='cairo')
 type <- getOption("bitmapType")

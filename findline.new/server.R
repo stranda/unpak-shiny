@@ -4,6 +4,50 @@ library(ggplot2)
 
 #### Define server logic required to summarize and view the selected dataset
 shinyServer(function(input, output, session) {
+  allLines <- reactive({
+    
+    cdata <- session$clientData
+    tmp <- strsplit(cdata$url_search,"&")[[1]]
+    tmp <- tmp[grep("line",tmp)]
+    if(length(tmp)>0) {
+      url_line=strsplit(tmp,"=")[[1]][2]
+      updateTextInput(session=session,inputId="line",value=url_line)
+    }
+    
+    con <- dbConnect(MySQL(),dbname="unpak",user="unpak-R",password="thaliana")
+    lines <- unique(dbGetQuery(con,"SELECT idAccession FROM Accession"))
+    if (toupper(input$line) %in% lines$idAccession) #this tests the text input against the db before running query (insulate from sql inject)
+    {
+      query <- paste("SELECT O.value, Ph.name, Pl.Accession_idAccession, T.name, E.name, F.name, Pl.idIndividualPlant",
+                     " FROM Observation O",
+                     " JOIN IndividualPlant Pl ON O.IndividualPlant_idIndividualPlant = Pl.idIndividualPlant",
+                     " JOIN Phenotype Ph ON O.Phenotype_idPhenotype = Ph.idPhenotype",
+                     " JOIN Experiment E ON Pl.Experiment_idExperiment = E.idExperiment",
+                     " JOIN Facility F ON F.idFacility = Pl.Facility_idFacility",
+                     " JOIN Treatment T ON O.Treatment_idTreatment = T.idTreatment",
+                     sep="")
+      
+      obstbl <- dbGetQuery(con,query)
+      names(obstbl) <- c("value","phenotype","line","treatment","experiment","facility","individualPlant")
+      
+      udf <- unique(obstbl[obstbl$line==input$line,c("experiment","phenotype","treatment")])
+      obstbl <- merge(obstbl,udf)
+      
+      if (dim(obstbl)[1]>0)
+      {
+        ret <- obstbl
+        ret <- ret[complete.cases(ret),]
+      } else {
+        ret <- NULL
+      }
+    } else {
+      ret <- NULL
+    }
+    cons<-dbListConnections(MySQL())
+    for(con in cons)
+      dbDisconnect(con) 
+    ret
+  })
   
   #This query returns all the data (all phenotypes, experiments and treatment) for a given line
   allData <- reactive({
@@ -154,13 +198,40 @@ shinyServer(function(input, output, session) {
 
   # This function, given a dataframe, builds the histograms, breaking them up by experiment and treatment pairs.
   buildHist = function(df) {
-    ggplot(data = df, aes(value, fill = treatment)) + 
-      geom_histogram(binwidth = input$bins) + geom_rug() +
-      facet_wrap(~ experiment + treatment, scales = 'free')
+    
+    if(input$correct == "none") {
+      df = values()
+      ggplot(data = df, aes(value, fill = treatment)) + 
+        geom_histogram(binwidth = input$bins) + geom_rug() +
+        facet_wrap(~ experiment + treatment, scales = 'free',ncol = 1)
+    }
+    
+    else if (input$correct == "all") {
+      df = df[df$phenotype==input$phenos,]
+      linedf = df[df$line == input$line,]
+      linedf$value = (linedf$value - mean(df$value))
+      df$value = (df$value - mean(df$value))
+      ggplot(data = df, aes(value, fill = treatment)) + 
+        geom_histogram(binwidth = input$bins) + scale_x_continuous() +
+        geom_vline(data = linedf, aes(xintercept=value), color = 'blue', linetype = 'dashed') +
+        facet_wrap(~ experiment + treatment, scales = 'free', ncol = 1) 
+      
+    }
+    else if(input$correct == 'phyt') {
+      df = df[df$phenotype==input$phenos,]
+      linedf = df[df$line == input$line,]
+      linedf$value = (linedf$value - mean(df$value))
+      df = df[grep("CS",df$line),]
+      df$value = (df$value - mean(df$value))
+      ggplot(data = df, aes(value, fill = treatment)) + 
+        geom_histogram(binwidth = input$bins) + scale_x_continuous() +
+        geom_vline(data = linedf, aes(xintercept=value), color = 'blue', linetype = 'dashed') +
+        facet_wrap(~ experiment + treatment, scales = 'free',ncol = 1) 
+    }
 }
   # This renders the histograms
   output$hist = renderPlot({  
-    data = values()
+    data = allLines()
     buildHist(data)  
   })
   
@@ -185,7 +256,7 @@ shinyServer(function(input, output, session) {
       paste("linePDF",Sys.Date(),".png",sep="")
     },
     content = function(file) {
-      data <- values()
+      data <- allLines()
       hist = buildHist(data)  
       device <- function(..., width, height) grDevices::png(..., width = width, height = height, res = 600, units = "in")
       ggsave(file, plot = hist, device = device)
