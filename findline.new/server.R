@@ -182,7 +182,7 @@ shinyServer(function(input, output, session) {
       df <- df[!is.na(df[,6]),] #don't mess with NAs
       
 
-      linedf = df[df$line%in%input$line,]
+      linedf = df[which(df$line == input$line),]
       
       names(df)[6] = 'value'
       names(linedf)[6] = 'value'
