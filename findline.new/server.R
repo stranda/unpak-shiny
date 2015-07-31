@@ -100,11 +100,9 @@ shinyServer(function(input, output, session) {
   # Renders the User interface for selecting which phenotype to use
   output$phenos = renderUI({
     df = allData()
-    
     poss = sort(unique(df$phenotype))
-    
     selectInput("phenos", "Choose a phenotype:", 
-                choices = c(poss),selected = poss[1])  
+                choices = c(poss),selected = poss[9])  
   })
   
   
@@ -177,8 +175,9 @@ shinyServer(function(input, output, session) {
   buildHist = function(df) {
     df = melt(df, id = c('line','experiment','treatment','facility','phenotype','individualPlant'))
     df = cast(df, line+experiment+treatment+facility+individualPlant ~ phenotype)
-    linedf = df[df$line%in%input$line,]
+    
     if(input$correct == "none") {
+      linedf = df[df$line%in%input$line,]
       names(df)[6] = 'value'
       names(linedf)[6] = 'value'
       if (input$linemeans == 'yes') { #get means per line instead of actual observations
@@ -187,8 +186,9 @@ shinyServer(function(input, output, session) {
       ggplot(data = df, aes(value, fill = treatment)) + 
         geom_histogram(binwidth = input$bins) + scale_x_continuous() +
         geom_vline(data = linedf, aes(xintercept=value), color = 'blue', linetype = 'dashed') +
-        facet_wrap(~ experiment + treatment, scales = 'free', ncol = 1) 
+        facet_grid(~ experiment + treatment, scales = 'free_x')
     }
+    
     
     else if (input$correct == "phyt") {
       df = phytcorrect(df, input$phenos, c("experiment","facility","treatment"), 'line')
@@ -199,23 +199,22 @@ shinyServer(function(input, output, session) {
       ggplot(data = df, aes(adjval, fill = treatment)) + 
         geom_histogram(binwidth = input$bins) + scale_x_continuous() +
         geom_vline(data = linedf, aes(xintercept=adjval), color = 'blue', linetype = 'dashed') +
-        facet_wrap(~ experiment + treatment, scales = 'free', ncol = 1) 
+        facet_grid(~ experiment + treatment, scales = 'free_x')
       
     }
     else if(input$correct == 'all') {
 
       df = allcorrect(df, input$phenos, c("experiment","facility","treatment"), 'line')
       linedf = df[df$line%in%input$line,]
+      
       if (input$linemeans == 'yes') { #get means per line instead of actual observations
         df <- df%>%group_by(line,experiment,treatment)%>%summarise(adjval=mean(adjval,na.rm=T))
       }
       ggplot(data = df, aes(adjval, fill = treatment)) + 
         geom_histogram(binwidth = input$bins) + scale_x_continuous() +
         geom_vline(data = linedf, aes(xintercept=adjval), color = 'blue', linetype = 'dashed') +
-        facet_wrap(~ experiment + treatment, scales = 'free',ncol = 1)
+        facet_grid(~ experiment + treatment, scales = 'free')
     }
-
-    
 }
   # This renders the histograms
   output$hist = renderPlot({  
