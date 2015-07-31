@@ -178,7 +178,10 @@ shinyServer(function(input, output, session) {
     
     if(input$correct == "none") {
       col = which(names(df) == input$phenos)
-      df = cbind(df[1:5],df[col])
+      df = cbind(df[,1:5],df[,col])
+      df <- df[!is.na(df[,6]),] #don't mess with NAs
+      
+
       linedf = df[df$line%in%input$line,]
       
       names(df)[6] = 'value'
@@ -189,7 +192,7 @@ shinyServer(function(input, output, session) {
       ggplot(data = df, aes(value, fill = treatment)) + 
         geom_histogram(binwidth = input$bins) + scale_x_continuous() +
         geom_vline(data = linedf, aes(xintercept=value), color = 'blue', linetype = 'dashed') +
-        facet_grid(~ experiment + treatment, scales = 'free_x')
+        facet_wrap(~ experiment + treatment, scales = 'free', ncol = 1)
     }
     
     
@@ -202,7 +205,7 @@ shinyServer(function(input, output, session) {
       ggplot(data = df, aes(adjval, fill = treatment)) + 
         geom_histogram(binwidth = input$bins) + scale_x_continuous() +
         geom_vline(data = linedf, aes(xintercept=adjval), color = 'blue', linetype = 'dashed') +
-        facet_grid(~ experiment + treatment, scales = 'free_x')
+        facet_wrap(~ experiment + treatment, scales = 'free', ncol = 1)
       
     }
     
@@ -218,7 +221,7 @@ shinyServer(function(input, output, session) {
       ggplot(data = df, aes(adjval, fill = treatment)) + 
         geom_histogram(binwidth = input$bins) + scale_x_continuous() +
         geom_vline(data = linedf, aes(xintercept=adjval), color = 'blue', linetype = 'dashed') +
-        facet_grid(~ experiment + treatment, scales = 'free')
+        facet_wrap(~ experiment + treatment, scales = 'free', ncol = 1)
     }
 }
   # This renders the histograms
