@@ -14,7 +14,7 @@ shinyUI(
 #           uiOutput('treats'),
           radioButtons("linemeans", "Report line means?",
                         c("Yes" = "yes",
-                          "No" = "no")),
+                          "No" = "no"), selected = 'no'),
           radioButtons("correct", "Correct for among facility\nvariation using",
                         c("Nothing (raw data)" = "none",
                           "Means of all plants" = "all",
@@ -26,8 +26,7 @@ shinyUI(
         mainPanel(
           htmlOutput("msg"),
           downloadLink('downloadPDF','Download PNG of plot below'),
-          plotOutput('hist', height = 800),
-          plotOutput('test')
+          plotOutput('hist')
         ), 
       # Close Sidebar Layout
       )

@@ -1,15 +1,15 @@
 source("adjust-pheno.R")
 
 ##Set up parameters
-adjust <- T
-linemeans <- T
-phytometers <- T
+adjust <- TRUE
+linemeans <- FALSE
+phytometers <- FALSE
 phenotype <- "fruitnum"
 line.identifier <- "Accession"
 
 focal.lines <- c("SALK_075879C","SALK_006272C")
 
-classifiers <- c("experiment","facility") #columns to take means over. this choice is what we have been doing
+classifiers <- c("experiment","facility","treatment") #columns to take means over. this choice is what we have been doing
 phenos <- read.csv("phenotypes2015-07-20.csv") #expects 'wide' not long (or melted) format
 names(phenos) #have to have the names used for lineid, pheno, and classifier in the phytcorrect function
 

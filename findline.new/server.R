@@ -1,4 +1,5 @@
 source("../global.R")
+source('adjust-pheno.R')
 library(ggplot2)
 
 
@@ -106,30 +107,6 @@ shinyServer(function(input, output, session) {
                 choices = c(poss),selected = poss[1])  
   })
   
-  # Renders the User interface for selecting which experiment to use
-#   output$expts = renderUI({
-#     df = allData()
-#     df = df[which(df$phenotype == input$phenos),]
-#     poss = sort(unique(df$experiment))
-#     
-#     selectInput("expts", "Choose an experiment:", 
-#                 choices = c("All",poss), selected = 'All')  
-#   })
-
-  # Renders the User interface for selecting which treatment to use
-#   output$treats = renderUI({
-#     df = allData()
-#     if (input$expts != "All")
-#       df = df[which(df$phenotype == input$phenos & df$experiment == input$expts),]
-#     else
-#       df = df[which(df$phenotype == input$phenos),]
-#     
-#     poss = sort(unique(df$treatment))
-#     
-#     selectInput("treats", "Choose a treatment:", 
-#                 choices = c("All",poss),selected = 'All')  
-#   })
-  
   
   # This query returns the values of a line based on the selected phenotype
   values <- reactive({
@@ -198,36 +175,47 @@ shinyServer(function(input, output, session) {
 
   # This function, given a dataframe, builds the histograms, breaking them up by experiment and treatment pairs.
   buildHist = function(df) {
-    
+    df = melt(df, id = c('line','experiment','treatment','facility','phenotype','individualPlant'))
+    df = cast(df, line+experiment+treatment+facility+individualPlant ~ phenotype)
+    linedf = df[df$line%in%input$line,]
     if(input$correct == "none") {
-      df = values()
-      ggplot(data = df, aes(value, fill = treatment)) + 
-        geom_histogram(binwidth = input$bins) + geom_rug() +
-        facet_wrap(~ experiment + treatment, scales = 'free',ncol = 1)
-    }
-    
-    else if (input$correct == "all") {
-      df = df[df$phenotype==input$phenos,]
-      linedf = df[df$line == input$line,]
-      linedf$value = (linedf$value - mean(df$value))
-      df$value = (df$value - mean(df$value))
+      names(df)[6] = 'value'
+      names(linedf)[6] = 'value'
+      if (input$linemeans == 'yes') { #get means per line instead of actual observations
+        df <- df%>%group_by(line,experiment,treatment)%>%summarise(value=mean(value,na.rm=T))
+      }
       ggplot(data = df, aes(value, fill = treatment)) + 
         geom_histogram(binwidth = input$bins) + scale_x_continuous() +
         geom_vline(data = linedf, aes(xintercept=value), color = 'blue', linetype = 'dashed') +
         facet_wrap(~ experiment + treatment, scales = 'free', ncol = 1) 
+    }
+    
+    else if (input$correct == "phyt") {
+      df = phytcorrect(df, input$phenos, c("experiment","facility","treatment"), 'line')
+      linedf = df[df$line%in%input$line,]
+      if (input$linemeans == 'yes') { #get means per line instead of actual observations
+        df <- df%>%group_by(line,experiment,treatment)%>%summarise(adjval=mean(adjval,na.rm=T))
+      }
+      ggplot(data = df, aes(adjval, fill = treatment)) + 
+        geom_histogram(binwidth = input$bins) + scale_x_continuous() +
+        geom_vline(data = linedf, aes(xintercept=adjval), color = 'blue', linetype = 'dashed') +
+        facet_wrap(~ experiment + treatment, scales = 'free', ncol = 1) 
       
     }
-    else if(input$correct == 'phyt') {
-      df = df[df$phenotype==input$phenos,]
-      linedf = df[df$line == input$line,]
-      linedf$value = (linedf$value - mean(df$value))
-      df = df[grep("CS",df$line),]
-      df$value = (df$value - mean(df$value))
-      ggplot(data = df, aes(value, fill = treatment)) + 
+    else if(input$correct == 'all') {
+
+      df = allcorrect(df, input$phenos, c("experiment","facility","treatment"), 'line')
+      linedf = df[df$line%in%input$line,]
+      if (input$linemeans == 'yes') { #get means per line instead of actual observations
+        df <- df%>%group_by(line,experiment,treatment)%>%summarise(adjval=mean(adjval,na.rm=T))
+      }
+      ggplot(data = df, aes(adjval, fill = treatment)) + 
         geom_histogram(binwidth = input$bins) + scale_x_continuous() +
-        geom_vline(data = linedf, aes(xintercept=value), color = 'blue', linetype = 'dashed') +
-        facet_wrap(~ experiment + treatment, scales = 'free',ncol = 1) 
+        geom_vline(data = linedf, aes(xintercept=adjval), color = 'blue', linetype = 'dashed') +
+        facet_wrap(~ experiment + treatment, scales = 'free',ncol = 1)
     }
+
+    
 }
   # This renders the histograms
   output$hist = renderPlot({  
