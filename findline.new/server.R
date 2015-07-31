@@ -193,7 +193,7 @@ shinyServer(function(input, output, session) {
     else if (input$correct == "phyt") {
       df = phytcorrect(df, input$phenos, c("experiment","facility","treatment"), 'line')
       linedf = df[df$line%in%input$line,]
-      if (input$linemeans == 'yes') { #get means per line instead of actual observations
+      if (input$linemeans == 'yes') { 
         df <- df%>%group_by(line,experiment,treatment)%>%summarise(adjval=mean(adjval,na.rm=T))
       }
       ggplot(data = df, aes(adjval, fill = treatment)) + 
@@ -202,14 +202,16 @@ shinyServer(function(input, output, session) {
         facet_grid(~ experiment + treatment, scales = 'free_x')
       
     }
+    
     else if(input$correct == 'all') {
 
       df = allcorrect(df, input$phenos, c("experiment","facility","treatment"), 'line')
       linedf = df[df$line%in%input$line,]
       
-      if (input$linemeans == 'yes') { #get means per line instead of actual observations
+      if (input$linemeans == 'yes') { 
         df <- df%>%group_by(line,experiment,treatment)%>%summarise(adjval=mean(adjval,na.rm=T))
       }
+      
       ggplot(data = df, aes(adjval, fill = treatment)) + 
         geom_histogram(binwidth = input$bins) + scale_x_continuous() +
         geom_vline(data = linedf, aes(xintercept=adjval), color = 'blue', linetype = 'dashed') +
