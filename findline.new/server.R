@@ -185,10 +185,13 @@ shinyServer(function(input, output, session) {
       linedf = df[which(df$line == input$line),]
       
       names(df)[6] = 'value'
-      names(linedf)[6] = 'value'
       if (input$linemeans == 'yes') { #get means per line instead of actual observations
         df <- df%>%group_by(line,experiment,treatment)%>%summarise(value=mean(value,na.rm=T))
       }
+      
+      linedf = df[which(df$line == input$line),]
+
+      
       ggplot(data = df, aes(value, fill = treatment)) + 
         geom_histogram(binwidth = input$bins) + scale_x_continuous() +
         geom_vline(data = linedf, aes(xintercept=value), color = 'blue', linetype = 'dashed') +
@@ -198,10 +201,10 @@ shinyServer(function(input, output, session) {
     
     else if (input$correct == "phyt") {
       df = phytcorrect(df, input$phenos, c("experiment","facility","treatment"), 'line')
-      linedf = df[df$line%in%input$line,]
       if (input$linemeans == 'yes') { 
         df <- df%>%group_by(line,experiment,treatment)%>%summarise(adjval=mean(adjval,na.rm=T))
       }
+      linedf = df[which(df$line == input$line),]
       ggplot(data = df, aes(adjval, fill = treatment)) + 
         geom_histogram(binwidth = input$bins) + scale_x_continuous() +
         geom_vline(data = linedf, aes(xintercept=adjval), color = 'blue', linetype = 'dashed') +
@@ -212,11 +215,12 @@ shinyServer(function(input, output, session) {
     else if(input$correct == 'all') {
 
       df = allcorrect(df, input$phenos, c("experiment","facility","treatment"), 'line')
-      linedf = df[df$line%in%input$line,]
+
       
       if (input$linemeans == 'yes') { 
         df <- df%>%group_by(line,experiment,treatment)%>%summarise(adjval=mean(adjval,na.rm=T))
       }
+      linedf = df[which(df$line == input$line),]
       
       ggplot(data = df, aes(adjval, fill = treatment)) + 
         geom_histogram(binwidth = input$bins) + scale_x_continuous() +
