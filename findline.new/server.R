@@ -177,7 +177,10 @@ shinyServer(function(input, output, session) {
     df = cast(df, line+experiment+treatment+facility+individualPlant ~ phenotype)
     
     if(input$correct == "none") {
+      col = which(names(df) == input$phenos)
+      df = cbind(df[1:5],df[col])
       linedf = df[df$line%in%input$line,]
+      
       names(df)[6] = 'value'
       names(linedf)[6] = 'value'
       if (input$linemeans == 'yes') { #get means per line instead of actual observations
