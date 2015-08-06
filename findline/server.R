@@ -31,8 +31,8 @@ shinyServer(function(input, output, session) {
       obstbl <- dbGetQuery(con,query)
       names(obstbl) <- c("value","phenotype","line","treatment","experiment","facility","individualPlant")
       
-      udf <- unique(obstbl[obstbl$line==input$line,c("experiment","phenotype","treatment")])
-      obstbl <- merge(obstbl,udf)
+#       udf <- unique(obstbl[obstbl$line==input$line,c("experiment","phenotype","treatment")])
+#       obstbl <- merge(obstbl,udf)
       
       if (dim(obstbl)[1]>0)
       {
@@ -153,6 +153,12 @@ shinyServer(function(input, output, session) {
     dbDisconnect(con)
     ret
   })
+  
+  output$line2 = renderUI({
+    if(input$multi == TRUE) {
+      textInput('line2', 'Enter a second accession:')
+    }
+  })
     
   # This gives the warning message if the line is not in the DB, or links to it if it is
   output$msg <- renderText({
@@ -175,26 +181,25 @@ shinyServer(function(input, output, session) {
   buildHist = function(df) {
     df = melt(df, id = c('line','experiment','treatment','facility','phenotype','individualPlant'))
     df = cast(df, line+experiment+treatment+facility+individualPlant ~ phenotype)
-    
+    inputLines = c(input$line,input$line2)
+      
     if(input$correct == "none") {
       col = which(names(df) == input$phenos)
       df = cbind(df[,1:5],df[,col])
       df <- df[!is.na(df[,6]),] #don't mess with NAs
-      
-
-      linedf = df[which(df$line == input$line),]
       
       names(df)[6] = 'value'
       if (input$linemeans == 'yes') { #get means per line instead of actual observations
         df <- df%>%group_by(line,experiment,treatment)%>%summarise(value=mean(value,na.rm=T))
       }
       
-      linedf = df[which(df$line == input$line),]
-
+      
+      linedf = df[which(df$line %in% inputLines),]
+      
       
       ggplot(data = df, aes(value, fill = treatment)) + 
-        geom_histogram(binwidth = input$bins) + scale_x_continuous() +
-        geom_vline(data = linedf, aes(xintercept=value), color = 'blue', linetype = 'dashed') +
+        geom_histogram(binwidth = input$bins) + scale_x_continuous() + scale_colour_brewer(type="qual", palette=8) +
+        geom_vline(data = linedf, aes(xintercept = value,color = line), linetype = 'dashed', show_guide = T) +
         facet_wrap(~ experiment + treatment, scales = 'free', ncol = 1)
     }
     
@@ -204,10 +209,10 @@ shinyServer(function(input, output, session) {
       if (input$linemeans == 'yes') { 
         df <- df%>%group_by(line,experiment,treatment)%>%summarise(adjval=mean(adjval,na.rm=T))
       }
-      linedf = df[which(df$line == input$line),]
+      linedf = df[which(df$line %in% inputLines),]
       ggplot(data = df, aes(adjval, fill = treatment)) + 
         geom_histogram(binwidth = input$bins) + scale_x_continuous() +
-        geom_vline(data = linedf, aes(xintercept=adjval), color = 'blue', linetype = 'dashed') +
+        geom_vline(data = linedf, aes(xintercept=adjval, color = line), linetype = 'dashed', show_guide = T) +
         facet_wrap(~ experiment + treatment, scales = 'free', ncol = 1)
       
     }
@@ -220,11 +225,11 @@ shinyServer(function(input, output, session) {
       if (input$linemeans == 'yes') { 
         df <- df%>%group_by(line,experiment,treatment)%>%summarise(adjval=mean(adjval,na.rm=T))
       }
-      linedf = df[which(df$line == input$line),]
+      linedf = df[which(df$line %in% inputLines),]
       
       ggplot(data = df, aes(adjval, fill = treatment)) + 
         geom_histogram(binwidth = input$bins) + scale_x_continuous() +
-        geom_vline(data = linedf, aes(xintercept=adjval), color = 'blue', linetype = 'dashed') +
+        geom_vline(data = linedf, aes(xintercept=adjval, color = line), linetype = 'dashed', show_guide = T) +
         facet_wrap(~ experiment + treatment, scales = 'free', ncol = 1)
     }
 }
@@ -233,6 +238,20 @@ shinyServer(function(input, output, session) {
     data = allLines()
     buildHist(data)  
   })
+  
+#   output$test = renderText({
+#     df = allLines()
+#     df = melt(df, id = c('line','experiment','treatment','facility','phenotype','individualPlant'))
+#     df = cast(df, line+experiment+treatment+facility+individualPlant ~ phenotype)
+#     inputLines = c(input$line, input$line2)
+#     col = which(names(df) == input$phenos)
+#     df = cbind(df[,1:5],df[,col])
+#     df <- df[!is.na(df[,6]),] #don't mess with NAs
+#     names(df)[6] = 'value'
+#     linedf = df[which(df$line %in% inputLines),]
+#     linedf
+#     inputLines
+#   })
   
   # This renders the data download link
   output$downloadData <- downloadHandler(

@@ -8,6 +8,8 @@ shinyUI(
       sidebarLayout(
         sidebarPanel(
           textInput("line", "Enter an accession:", "CS70000"),
+          checkboxInput('multi', "Add a second line?"),
+          uiOutput('line2'),
           uiOutput('phenos'),
           sliderInput('bins','BinSize',min=0.5, max = 20, value = 1, step = 0.5),
 #           uiOutput('expts'),

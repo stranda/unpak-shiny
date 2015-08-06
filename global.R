@@ -1,10 +1,10 @@
 library(shiny)
-library(xtable)
+# library(xtable)
 library(reshape)
 library(RMySQL)
 library(dplyr)
 
-options(bitmapType='cairo')
+# options(bitmapType='cairo')
 type <- getOption("bitmapType")
 
 makeHTMLtable <- function (df,session) {
