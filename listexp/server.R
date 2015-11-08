@@ -1,4 +1,6 @@
 source("../global.R")
+dbInfo = read.table('../../dbInfo.txt')
+
 makeHTMLtable <- function (df)
 {
     url.root.old <- "http://arabidopsis.org/servlets/Search?type=germplasm&search_action=search&pageNum=1&search=Submit+Query&germplasm_type=individual_line&taxon=1&name_type_1=gene_name&method_1=2&name_1=&name_type_2=germplasm_phenotype&method_2=1&name_2=&name_type_3=germplasm_stock_name&method_3=4&name_3="
@@ -26,7 +28,7 @@ makeHTMLtable <- function (df)
 shinyServer(function(input, output) {
   
   values <- reactive({
-    con <- dbConnect(MySQL(),dbname="unpak",user="unpak-R",password="thaliana")
+    con = dbConnect(MySQL(),dbname=toString(dbInfo[[1]]),user=toString(dbInfo[[2]]),password=toString(dbInfo[[3]]))
     query <- paste("SELECT * FROM Experiment")
     
     obstbl <- dbGetQuery(con,query)

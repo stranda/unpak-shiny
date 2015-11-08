@@ -1,6 +1,7 @@
 source("../global.R")
 source('adjust-pheno.R')
 library(ggplot2)
+dbInfo = read.table('../../dbInfo.txt')
 
 #### Define server logic required to summarize and view the selected dataset
 shinyServer(function(input, output, session) {
@@ -14,10 +15,9 @@ shinyServer(function(input, output, session) {
       updateTextInput(session=session,inputId="line",value=url_line)
     }
     
-    con <- dbConnect(MySQL(),dbname="unpak",user="unpak-R",password="thaliana")
+    con = dbConnect(MySQL(),dbname=toString(dbInfo[[1]]),user=toString(dbInfo[[2]]),password=toString(dbInfo[[3]]))
     lines <- unique(dbGetQuery(con,"SELECT idAccession FROM Accession"))
-    if (toupper(input$line) %in% lines$idAccession) #this tests the text input against the db before running query (insulate from sql inject)
-    {
+
       query <- paste("SELECT O.value, Ph.name, Pl.Accession_idAccession, T.name, E.name, F.name, Pl.idIndividualPlant",
                      " FROM Observation O",
                      " JOIN IndividualPlant Pl ON O.IndividualPlant_idIndividualPlant = Pl.idIndividualPlant",
@@ -40,9 +40,7 @@ shinyServer(function(input, output, session) {
       } else {
         ret <- NULL
       }
-    } else {
-      ret <- NULL
-    }
+      
     cons<-dbListConnections(MySQL())
     for(con in cons)
       dbDisconnect(con) 
@@ -105,9 +103,10 @@ shinyServer(function(input, output, session) {
       
       linedf = df[which(df$line %in% inputLines),]
       
+      numBins = (range(df$value)[2] - range(df$value)[1]) / input$bins
       
       ggplot(data = df, aes(value, fill = treatment)) + 
-        geom_histogram(binwidth = input$bins) + scale_x_continuous() + scale_colour_brewer(type="qual", palette=8) +
+        geom_histogram(binwidth = ((range(df$value)[2] - range(df$value)[1]) / input$bins)) + scale_x_continuous() + scale_colour_brewer(type="qual", palette=8) +
         geom_vline(data = linedf, aes(xintercept = value,color = line), linetype = 'dashed', show_guide = T) +
         facet_wrap(~ experiment + treatment, scales = 'free', ncol = 1)
     }

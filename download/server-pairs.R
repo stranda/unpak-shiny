@@ -1,4 +1,6 @@
 source("global.R")
+dbInfo = read.table('../../dbInfo.txt')
+
 
 makeHTMLtable <- function (df)
 {
@@ -27,8 +29,8 @@ makeHTMLtable <- function (df)
 shinyServer(function(input, output) {
     values <- reactive({
         if (input$expt=="All"){expt=" "} else {expt=paste0(" WHERE E.name = '",input$expt,"'")}
-        con <- dbConnect(MySQL(),dbname="unpak",user="unpak-R",password="thaliana")
-        query <- paste("SELECT Pl.idIndividualPlant, Pl.Accession_idAccession, T.name, E.name, F.Name,",
+      con = dbConnect(MySQL(),dbname=toString(dbInfo[[1]]),user=toString(dbInfo[[2]]),password=toString(dbInfo[[3]]))
+      query <- paste("SELECT Pl.idIndividualPlant, Pl.Accession_idAccession, T.name, E.name, F.Name,",
                        " Ph.name, O.value",
                        " FROM Observation O",
                        " JOIN IndividualPlant Pl ON O.IndividualPlant_idIndividualPlant = Pl.idIndividualPlant",

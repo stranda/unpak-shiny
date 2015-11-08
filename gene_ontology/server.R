@@ -1,6 +1,7 @@
 #Partial Authorship by Nick Levitt
 source("global.R")
 library(ggplot2)
+dbInfo = read.table('../../dbInfo.txt')
 
 
 
@@ -32,8 +33,8 @@ shinyServer(function(input, output,session) {
   allData = reactive({
     expt= " "
     treat=" "
-    con = dbConnect(MySQL(),dbname="unpak",user="unpak-R",password="thaliana")
-      query <- paste("SELECT O.value, Pl.Accession_idAccession, T.name, E.name, F.Name FROM Observation O",
+    con = dbConnect(MySQL(),dbname=toString(dbInfo[[1]]),user=toString(dbInfo[[2]]),password=toString(dbInfo[[3]]))
+    query <- paste("SELECT O.value, Pl.Accession_idAccession, T.name, E.name, F.Name FROM Observation O",
                      " JOIN IndividualPlant Pl ON O.IndividualPlant_idIndividualPlant = Pl.idIndividualPlant",
                      " JOIN Phenotype Ph ON O.Phenotype_idPhenotype = Ph.idPhenotype",
                      " JOIN Experiment E ON Pl.Experiment_idExperiment = E.idExperiment",
@@ -71,8 +72,8 @@ shinyServer(function(input, output,session) {
       if (is.null(input$expt)){expt=" "} else if (input$expt=="All"){expt=" "} else {expt=paste0(" E.name = '",input$expt,"' AND")}
       
       if (input$treat=="All"){treat=" "} else {treat=paste0(" T.name = '",input$treat,"' AND")}
-      con <- dbConnect(MySQL(),dbname="unpak",user="unpak-R",password="thaliana")
-      query <- paste("SELECT O.value, Pl.Accession_idAccession, T.name, E.name, F.Name FROM Observation O",
+    con = dbConnect(MySQL(),dbname=toString(dbInfo[[1]]),user=toString(dbInfo[[2]]),password=toString(dbInfo[[3]]))
+    query <- paste("SELECT O.value, Pl.Accession_idAccession, T.name, E.name, F.Name FROM Observation O",
                      " JOIN IndividualPlant Pl ON O.IndividualPlant_idIndividualPlant = Pl.idIndividualPlant",
                      " JOIN Phenotype Ph ON O.Phenotype_idPhenotype = Ph.idPhenotype",
                      " JOIN Experiment E ON Pl.Experiment_idExperiment = E.idExperiment",

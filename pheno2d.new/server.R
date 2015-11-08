@@ -8,13 +8,16 @@ xy_range_str <- function(e) {
   c(round(e$xmin, 2), round(e$xmax, 2), round(e$ymin, 2),round(e$ymax, 2))
 }
 
+dbInfo = read.table('../../dbInfo.txt')
+
+
 #### Define server logic required to summarize and view the selected dataset
 shinyServer(function(input, output,session) {
   # Query for all the data of the two selected phenotypes 
   allData <- reactive({
     expt= " "
     treat=" "
-    con <- dbConnect(MySQL(),dbname="unpak",user="unpak-R",password="thaliana")
+    con = dbConnect(MySQL(),dbname=toString(dbInfo[[1]]),user=toString(dbInfo[[2]]),password=toString(dbInfo[[3]]))
     query <- paste("SELECT O.value, Pl.Accession_idAccession, T.name, E.name, F.Name, Ph.name FROM Observation O",
                    " JOIN IndividualPlant Pl ON O.IndividualPlant_idIndividualPlant = Pl.idIndividualPlant",
                    " JOIN Phenotype Ph ON O.Phenotype_idPhenotype = Ph.idPhenotype",
@@ -57,8 +60,8 @@ shinyServer(function(input, output,session) {
   values <- reactive({
    if (input$expt=="All"){expt=" "} else {expt=paste0(" E.name = '",input$expt,"' AND")}
    if (input$treat=="All"){treat=" "} else {treat=paste0(" T.name = '",input$treat,"' AND")}
-     con <- dbConnect(MySQL(),dbname="unpak",user="unpak-R",password="thaliana")
-     query <- paste("SELECT O.value, Pl.Accession_idAccession, T.name, E.name, F.Name, Ph.name FROM Observation O",
+    con = dbConnect(MySQL(),dbname=toString(dbInfo[[1]]),user=toString(dbInfo[[2]]),password=toString(dbInfo[[3]]))
+    query <- paste("SELECT O.value, Pl.Accession_idAccession, T.name, E.name, F.Name, Ph.name FROM Observation O",
                     " JOIN IndividualPlant Pl ON O.IndividualPlant_idIndividualPlant = Pl.idIndividualPlant",
                     " JOIN Phenotype Ph ON O.Phenotype_idPhenotype = Ph.idPhenotype",
                     " JOIN Experiment E ON Pl.Experiment_idExperiment = E.idExperiment",

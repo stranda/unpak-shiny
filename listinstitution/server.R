@@ -1,10 +1,11 @@
 source("../global.R")
+dbInfo = read.table('../../dbInfo.txt')
 
 #### Define server logic required to summarize and view the selected dataset
 shinyServer(function(input, output) {
   
   values <- reactive({
-    con <- dbConnect(MySQL(),dbname="unpak",user="unpak-R",password="thaliana")
+    con = dbConnect(MySQL(),dbname=toString(dbInfo[[1]]),user=toString(dbInfo[[2]]),password=toString(dbInfo[[3]]))
     query <- paste("SELECT * FROM Institution")
     
     obstbl <- dbGetQuery(con,query)

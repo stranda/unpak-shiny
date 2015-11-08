@@ -1,6 +1,7 @@
 source("../global.R")
+dbInfo = read.table('../../dbInfo.txt')
 
-con <- dbConnect(MySQL(),dbname="unpak",user="unpak-R",password="thaliana")
+con = dbConnect(MySQL(),dbname=toString(dbInfo[[1]]),user=toString(dbInfo[[2]]),password=toString(dbInfo[[3]]))
 #the next line only allow for experiments with phenotypes
 expttbl <- unique(dbGetQuery(con,"SELECT E.name FROM Experiment E JOIN IndividualPlant IP ON IP.Experiment_idExperiment = E.idExperiment JOIN Observation O ON IP.idIndividualPlant = O.IndividualPlant_idIndividualPlant"))
 dbDisconnect(con)

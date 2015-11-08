@@ -1,9 +1,9 @@
 #Partial Authorship by Nick Levitt
-source("global.R")
+source("../global.R")
 library(ggplot2)
 library(RColorBrewer)
-
 dbInfo = read.table('../../dbInfo.txt')
+
 
 con = dbConnect(MySQL(),dbname=toString(dbInfo[[1]]),user=toString(dbInfo[[2]]),password=toString(dbInfo[[3]]))
 #get some phenotype names
@@ -26,18 +26,11 @@ shinyUI(navbarPage("Find lines based on phenotype",
                               sidebarPanel(
                                 selectInput("pheno", "Choose a phenotype:", 
                                             choices = phenoname),
-                                
-#                                 selectInput("expt", "Choose an experiment:", 
-#                                             choices = c("All",sort(expttbl$name))),
                                 uiOutput('experiments'),
-                                
-                                selectInput("treat", "Choose a treatment:", 
-                                            choices = c("All",treatname)),
-                                
+                                uiOutput('treats'),
                                 #            radioButtons("includeall", "Include 'minor' phenotypes",
                                 #                         c("Yes" = "yes",
-                                #                           "No" = "no")),
-                                
+                                #                           "No" = "no")),                                
                                 radioButtons("linemeans", "Report line means?",
                                              c("Yes" = "yes",
                                                "No" = "no")),
@@ -47,7 +40,8 @@ shinyUI(navbarPage("Find lines based on phenotype",
                                 
                                 
                                 sliderInput("breaks", "Number of bins",
-                                            min = 1, max = 100, value = 30, step = 5)
+                                            min = 1, max = 100, value = 30, step = 5),
+                                sliderInput("size", "Area", min = 10,  max = 1000, value = 500, step = 10)
                                 
                               ),
                               
@@ -55,31 +49,34 @@ shinyUI(navbarPage("Find lines based on phenotype",
                               #Render the results
                               mainPanel(
                                 textOutput("msg"),                                
-                                downloadLink('downloadData','Download CSV of selection'),
                                 
                                 fluidRow(
                                   column(12,
-                                         "",
+                                         downloadLink('downloadPlot','Download PNG of plot below'),
                                          fluidRow(
                                            column(6,
-                                                  plotOutput("hist")),
-                                           column(6,
-                                                  plotOutput('selectHist'))
+                                                  uiOutput("ggvis_ui"),
+                                                  ggvisOutput("ggvis")
+
+                                                  ),
+                                           column(6
+                                                  )
                                          ),
                                          fluidRow(
                                            column(12,
                                                   h3("Statistics on Selected Samples"),tableOutput("stats"))
                                          )
-                                        ) 
-                                  )
+                                  ) 
                                 )
                               )
+                            )
                             
-                            ),
+                   ),
                    
                    
                    tabPanel("Lines",
-                            htmlOutput("linktable")
-                            )
-
+                            
+                            dataTableOutput("all")
+                   )
+                   
 ))

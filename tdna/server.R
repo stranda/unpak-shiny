@@ -1,13 +1,14 @@
 source("../global.R")
 library(ggplot2)
 
+dbInfo = read.table('../../dbInfo.txt')
 
 #### Define server logic required to summarize and view the selected dataset
 shinyServer(function(input, output,session) {
 
  values <- reactive({
-     con <- dbConnect(MySQL(),dbname="unpak",user="unpak-R",password="thaliana")
-     query <- paste("SELECT * FROM TDNARatio",
+   con = dbConnect(MySQL(),dbname=toString(dbInfo[[1]]),user=toString(dbInfo[[2]]),password=toString(dbInfo[[3]]))
+   query <- paste("SELECT * FROM TDNARatio",
                     sep="")
 
      obstbl <- dbGetQuery(con,query)

@@ -2,6 +2,7 @@ source("../global.R")
 library(ggplot2)
 
 # Define UI for dataset viewer application
+
 shinyUI(
   navbarPage("Phenotypes from line id",
     tabPanel("Histogram",
@@ -10,7 +11,7 @@ shinyUI(
           textInput("line", "Enter an accession:", "CS70000"),
           textInput("line2", "Enter a second accession:", ""),
           uiOutput('phenos'),
-          sliderInput('bins','BinSize',min=0.5, max = 20, value = 1, step = 0.5),
+          sliderInput('bins','Number of Bins',min=1, max = 50, value = 1, step = 1),
 
           radioButtons("linemeans", "Report line means?",
                         c("Yes" = "yes",

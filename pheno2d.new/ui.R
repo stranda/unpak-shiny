@@ -2,7 +2,8 @@
 source("../global.R")
 library(ggplot2)
 
-con <- dbConnect(MySQL(),dbname="unpak",user="unpak-R",password="thaliana")
+dbInfo = read.table('../../dbInfo.txt')
+con = dbConnect(MySQL(),dbname=toString(dbInfo[[1]]),user=toString(dbInfo[[2]]),password=toString(dbInfo[[3]]))
 #get some phenotype names
 phenotbl <- dbGetQuery(con,"SELECT * FROM Phenotype")
 phenoname <- phenotbl$name
