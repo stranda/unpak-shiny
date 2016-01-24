@@ -1,5 +1,5 @@
 source("../global.R")
-source('adjust-pheno.R')
+#source('adjust-pheno.R')
 library(ggplot2)
 dbInfo = read.table('../../dbInfo.txt')
 
