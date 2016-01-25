@@ -36,7 +36,7 @@ shinyServer(function(input, output) {
         if (input$wide=="yes")
             {
                names(ret)[grep("Phenotype",names(ret))] <- "variable"
-               tmp <- cast(ret)
+               tmp <- cast(ret,fun.aggregate=mean)
                ret <- tmp
             }
         ret
@@ -49,7 +49,7 @@ shinyServer(function(input, output) {
                 {
                     paste("No data present")
                 } else {
-                    paste(dim(df)[1],"rows and",dim(df)[2],"columns of data ready to download")
+                    paste(paste(dim(df)[1],"rows and",dim(df)[2],"columns of data ready to download\n"),paste())
                 }
         })
     

@@ -2,7 +2,7 @@
 # take an edited exp1a datasheet and put into forms that can be used in unpak db
 #
 source("setup-unpakR.R")
-
+dbInfo = read.table('../../dbInfo.txt')
 #########read a csv file and do initial QC screen.
 
 read.mega <- function(fn="CofC_EXPT3PT2_ALL_DATA - Sheet1.csv",
@@ -75,11 +75,11 @@ read.mega <- function(fn="CofC_EXPT3PT2_ALL_DATA - Sheet1.csv",
 
 
 upload.exp <- function(csvfile="CofC_EXPT3PT2_ALL_DATA - Sheet1.csv",pedantic=T,insert_accession=FALSE,commit=F,
-                       dbname="unpak", hostname="localhost", username="unpak-R", password="thaliana")
+                       dbname="", hostname="", username="", password="")
     {
         if (FALSE) {csvfile="SF11_input-file.csv";pedantic=F;insert_accession=FALSE;commit=F;
-                       dbname="unpak"; hostname="localhost"; username="unpak-R"; password="thaliana"}
-        unpak_db <- src_mysql(dbname=dbname,host = hostname, user = username, password = password)  #this needs improvement for security
+                       dbname=""; hostname=""; username=""; password=""}
+        unpak_db <- src_mysql(dbname=toString(dbInfo[[1]]),user=toString(dbInfo[[2]]),password=toString(dbInfo[[3]]),hostname="localhost")  #this needs improvement for security
         required.fields <- c("expt.id", "accession", "institution",
                              "facility", "expt.plantnum", "flat", "row", "column",
                              "parent.id", "treatment","date","investigator")
@@ -277,7 +277,7 @@ print("this far")
 ###                ip <- data.frame(tbl(unpak_db, "IndividualPlant"))
 ### went back to the raw(er) RMySQL interface
                 
-                con <- dbConnect(MySQL(),dbname=dbname,user=username,password=password)
+                con <- dbConnect(MySQL(),dbname=toString(dbInfo[[1]]),user=toString(dbInfo[[2]]),password=toString(dbInfo[[3]]))
 
                 ip <- dbGetQuery(con,"SELECT * FROM IndividualPlant")
 

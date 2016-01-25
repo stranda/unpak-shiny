@@ -1,9 +1,0 @@
-expt.type,expt.id,accession,parent.id,institution,facility,expt.plantnum,flat,row,column,date,investigator,seeds.sown,germinants.7d,germinants.14d,days.to.bolt,diameter.at.bolt,mainbranch,ttl.maininfl.branch,basal.branch,branch.basalbranch,fruitnum,aborted.fruits,inflorescence.height,basalfruit.length,midfruit.length,upperfruit.length,treatment
-EXPT,3pt2,CS70000,new_seeds,CofC,GC2,64,13,K,4,2013-01-01,anonymous unpak,2,2,1,-1,58.1,3,3,0,0,71,7,32.5,12.9,9.8,9.3,control
-EXPT,3pt2,SALK_126593C,CofC_SF05_80,CofC,GC2,112,14,G,4,2013-01-01,anonymous unpak,2,2,2,0,58.3,2,8,4,8,114,98,36.5,11.6,13.5,10.4,control
-EXPT,3pt2,SALK_126593C,CofC_SF05_80,CofC,GC1,650,22,A,2,2013-01-01,anonymous unpak,2,2,2,0,98.8,3,6,0,0,91,20,37.6,15,14.3,11.3,control
-EXPT,3pt2,SALK_126593C,CofC_SF05_80,CofC,GC1,848,24,J,2,2013-01-01,anonymous unpak,2,2,2,0,81.2,3,6,0,0,110,20,39,14.5,14.6,10.1,control
-EXPT,3pt2,SALK_123484C,CofC_SF05_209,CofC,GC2,10,13,B,4,2013-01-01,anonymous unpak,2,1,1,0,55.8,2,2,1,1,81,13,33.8,14.2,13.8,9.9,control
-EXPT,3pt2,SALK_012144C,CofC_SF05_0275,CofC,GC2,133,14,K,1,2013-01-01,anonymous unpak,2,2,2,0,59.1,3,8,2,2,83,67,33.1,13.4,10.4,8.8,control
-EXPT,3pt2,SALK_012144C,CofC_SF05_0275,CofC,GC2,206,15,K,2,2013-01-01,anonymous unpak,2,2,2,0,79.3,2,3,5,7,135,49,39,13.2,10.9,6.5,control
-EXPT,3pt2,SALK_012144C,CofC_SF05_0275,CofC,GC2,361,18,A,1,2013-01-01,anonymous unpak,2,2,2,0,73.3,2,4,1,1,53,27,27.1,11,12.3,8.9,control
