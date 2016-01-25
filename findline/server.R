@@ -107,7 +107,7 @@ shinyServer(function(input, output, session) {
       
       ggplot(data = df, aes(value, fill = treatment)) + 
         geom_histogram(binwidth = ((range(df$value)[2] - range(df$value)[1]) / input$bins)) + scale_x_continuous() + scale_colour_brewer(type="qual", palette=8) +
-        geom_vline(data = linedf, aes(xintercept = value,color = line), linetype = 'dashed', show_guide = T) +
+        geom_vline(data = linedf, aes(xintercept = value,color = line), linetype = 'dashed', show.legend = T) +
         facet_wrap(~ experiment + treatment, scales = 'free', ncol = 1)
     }
     
@@ -120,7 +120,7 @@ shinyServer(function(input, output, session) {
       linedf = df[which(df$line %in% inputLines),]
       ggplot(data = df, aes(adjval, fill = treatment)) + 
         geom_histogram(binwidth = input$bins) + scale_x_continuous() +
-        geom_vline(data = linedf, aes(xintercept=adjval, color = line), linetype = 'dashed', show_guide = T) +
+        geom_vline(data = linedf, aes(xintercept=adjval, color = line), linetype = 'dashed', show.legend = T) +
         facet_wrap(~ experiment + treatment, scales = 'free', ncol = 1)
       
     }
@@ -137,7 +137,7 @@ shinyServer(function(input, output, session) {
       
       ggplot(data = df, aes(adjval, fill = treatment)) + 
         geom_histogram(binwidth = input$bins) + scale_x_continuous() +
-        geom_vline(data = linedf, aes(xintercept=adjval, color = line), linetype = 'dashed', show_guide = T) +
+        geom_vline(data = linedf, aes(xintercept=adjval, color = line), linetype = 'dashed', show.legend = T) +
         facet_wrap(~ experiment + treatment, scales = 'free', ncol = 1)
     }
 }
