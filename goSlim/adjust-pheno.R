@@ -8,12 +8,12 @@ require(dplyr)
 
 phytcorrect <- function(dat, pheno, classifier, lineid) {
 
-        dat <- dat[dat$phenotype %in% pheno,]
+#         dat <- dat[dat$phenotype %in% pheno,]
         dat <- dat[!is.na(dat$value),] #don't mess with NAs
         
         filter.cond <- paste0("grepl('CS',",lineid,")")
-        select.cond <- paste0(c(classifier,"phenotype","value"))
-        group.cond <-  paste0(c(classifier,"phenotype"))
+        select.cond <- paste0(c(classifier,"phenotype","value", "slim"))
+        group.cond <-  paste0(c(classifier,"phenotype", "slim"))
  ### mean all phyts by classifiers
         phytmn <- filter_(dat,filter.cond)%>%
             select_(.dots=select.cond)%>%
@@ -21,7 +21,7 @@ phytcorrect <- function(dat, pheno, classifier, lineid) {
         names(phytmn)[names(phytmn)=="value"] <- "mean"  
 
 ### adj dat by phytometer means
-        select.cond <- paste0(c(classifier,lineid,"phenotype","value"))
+        select.cond <- paste0(c(classifier,lineid,"phenotype","value", "slim"))
         adjdat <- left_join(dat,phytmn)
         adjdat$value <- adjdat$value-adjdat$mean
         adjdat <- adjdat %>% select_(.dots=select.cond)

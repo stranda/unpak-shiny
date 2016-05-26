@@ -78,29 +78,17 @@ shinyServer(function(input, output, session) {
   })
   
   # This gives the warning message if the line is not in the DB, or links to it if it is
-  output$msg1 <- renderUI({
-    df = allData()
+  output$msg <- renderText({
     url.root <- "http://arabidopsis.org/servlets/Search?type=germplasm&search_action=search&pageNum=1&search=Submit+Query&germplasm_type=individual_line&taxon=1&name_type_1=gene_name&method_1=2&name_1=&name_type_2=germplasm_phenotype&method_2=1&name_2=&name_type_3=germplasm_stock_name&method_3=4&name_3="
-    if(input$line %in% df$line)
-      HTML(paste0("Go to TAIR for First Line: <a href='",url.root,input$line,"' target='_blank'>",input$line,"</a>"))  
-    else
-      paste('Line ', input$line, " is not found in the database. Please try a different line.", sep='')
+    fl <- focalLines() %in% allLineNames()
+    if ((is.na(focalLines())|(sum(as.numeric(!fl))>0)))
+    {
+      paste("This line",input$line,"is not in the db, Try another one")
+    } else {
+      for (ln in focalLines())
+        HTML(paste0("Go to TAIR for Line: <a href='",url.root,ln,"' target='_blank'>",ln,"</a>"))         
+    }
   })
-  
-    output$msg2 <- renderUI({
-      if (input$line2 == '') {
-      ' '
-      }
-      else{
-        df = allData()
-        url.root <- "http://arabidopsis.org/servlets/Search?type=germplasm&search_action=search&pageNum=1&search=Submit+Query&germplasm_type=individual_line&taxon=1&name_type_1=gene_name&method_1=2&name_1=&name_type_2=germplasm_phenotype&method_2=1&name_2=&name_type_3=germplasm_stock_name&method_3=4&name_3="
-        if(input$line2 %in% df$line)
-          HTML(paste0("Go to TAIR for Second Line: <a href='",url.root,input$line2,"' target='_blank'>",input$line2,"</a>"))  
-        else
-          paste('Line ', input$line2, " is not found in the database. Please try a different line.", sep='')
-      }
-    })
-
   
   ### This function, given a dataframe, builds the histograms, breaking them up by experiment and treatment pairs.
   buildFinalData = function() {

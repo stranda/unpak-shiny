@@ -23,8 +23,7 @@ shinyUI(
                         ),
                         # Render the results
                         mainPanel(
-                          uiOutput("msg1"),
-                          uiOutput('msg2'),
+                          htmlOutput("msg"),
                           downloadLink('downloadPDF','Download PNG of plot below'),
                           plotOutput('hist', height = 800)
                         )
