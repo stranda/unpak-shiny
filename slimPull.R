@@ -38,4 +38,4 @@ for (i in 1:length(phenoname)) {
   alldf[[i]] = df
   print(i)
 }
-save(alldf, file='allSlimData')
+save(alldf, file='allSlimData.rda')

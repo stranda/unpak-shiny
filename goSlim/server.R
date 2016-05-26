@@ -1,44 +1,12 @@
 source("../global.R")
 source('adjust-pheno.R')
 library(ggplot2)
-load('../allSlimData')
+load('../allSlimData.rda')
 dbInfo = read.table('../../dbInfo.txt')
 
 #### Define server logic required to summarize and view the selected dataset
 shinyServer(function(input, output, session) {
 
-  # Old code for using SQL query to pull ontology data. Now use alldf[[x]] to pull based off selected phenotype 
-  
-#   allData <- reactive({
-#     con = dbConnect(MySQL(),dbname=toString(dbInfo[[1]]),user=toString(dbInfo[[2]]),password=toString(dbInfo[[3]]))
-#     #    lines <- unique(dbGetQuery(con,"SELECT idAccession FROM Accession"))
-#     query <- paste("SELECT Go.GoSlim, Ga.Accession_idAccession, Ph.name, O.value, T.name, E.name, F.Name FROM GeneOntology Go",
-#                    " JOIN GeneAccession Ga ON Go.Gene_idGene = Ga.Gene_idGene",
-#                    " JOIN IndividualPlant Pl ON Ga.Accession_idAccession = Pl.Accession_idAccession",
-#                    " JOIN Observation O ON Pl.idIndividualPlant = O.IndividualPlant_idIndividualPlant",
-#                    " JOIN Phenotype Ph ON O.Phenotype_idPhenotype = Ph.idPhenotype",
-#                    " JOIN Experiment E ON Pl.Experiment_idExperiment = E.idExperiment",
-#                    " JOIN Treatment T ON O.Treatment_idTreatment = T.idTreatment",
-#                    " JOIN Facility F ON Pl.Facility_idFacility = F.idFacility",
-#                    " WHERE Go.GoSlim = '", input$slim, "' AND Ph.name = '", input$pheno, "'",
-#                    sep="")
-#     
-#     obstbl <- dbGetQuery(con,query)
-#     names(obstbl) <- c("slim","line","phenotype","value","treatment","experiment", "facility")
-#     
-#     if (dim(obstbl)[1]>0)
-#     {
-#       ret <- obstbl
-#       ret <- ret[complete.cases(ret),]
-#     } else {
-#       ret <- NULL
-#     }
-#     
-#     cons<-dbListConnections(MySQL())
-#     for(con in cons)
-#       dbDisconnect(con) 
-#     ret
-#   })
   
   possSlims = function() {
     con = dbConnect(MySQL(),dbname=toString(dbInfo[[1]]),user=toString(dbInfo[[2]]),password=toString(dbInfo[[3]]))
