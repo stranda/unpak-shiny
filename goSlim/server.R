@@ -75,8 +75,10 @@ shinyServer(function(input, output, session) {
   
   output$slimBox <- renderPlot({
     df = buildFinalData()
-    p <- ggplot(df, aes(factor(treatment), value))
-    out = p + geom_boxplot(aes(fill = factor(treatment))) + facet_grid(slim ~ .) + ylab(input$pheno) + xlab('Treatment')
+    df$treatment <- as.factor(df$treatment)
+    p <- ggplot(df, aes(slim, value))
+#    out = p + geom_boxplot(aes(fill = factor(treatment))) + facet_grid(slim ~ .) + ylab(input$pheno) + xlab('Treatment')
+    out = p + geom_boxplot(aes(fill = slim)) + facet_grid(treatment ~ .) + ylab(input$pheno) + xlab('GO Slim') + geom_jitter(width=0.1)
     if (input$log == TRUE) {
       out + scale_y_log10()
     }

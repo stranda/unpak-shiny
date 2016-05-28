@@ -21,7 +21,7 @@ dbDisconnect(con)
 
 
 # Define UI for dataset viewer application
-shinyUI(navbarPage("Find lines based on Processes", 
+shinyUI(navbarPage("Compare phenotypes among GO categories", 
                    tabPanel("Histograms",
                             sidebarLayout(
                               sidebarPanel(
@@ -47,15 +47,11 @@ shinyUI(navbarPage("Find lines based on Processes",
                               mainPanel(
                                 fluidRow(
                                   column(12,
-                                          downloadLink('downloadPlot','Download PNG of plot below'),
+#                                          downloadLink('downloadPlot','Download PNG of plot below'),
                                           fluidRow(
                                             column(12,
                                                    plotOutput("slimBox", height = 700))
                                          )
-#                                          fluidRow(
-#                                            column(12,
-#                                                   h3("Statistics on Selected Samples"),tableOutput("stats"))
-#                                          )
                                   ) 
                                 )
                               )

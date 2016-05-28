@@ -1,8 +1,6 @@
 #NEW FINDLINE APP USING METHODS FROM FINEGENE
 
 source("../global.R")
-source('adjust-pheno.R')
-library(ggplot2)
 dbInfo = read.table('../../dbInfo.txt')
 
 #### Define server logic required to summarize and view the selected dataset

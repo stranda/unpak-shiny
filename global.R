@@ -4,6 +4,8 @@ library(unpakR)
 library(reshape)
 library(RMySQL)
 library(dplyr)
+library(adjustPhenotypes)
+library(ggplot2)
 
 # options(bitmapType='cairo')
 type <- getOption("bitmapType")
