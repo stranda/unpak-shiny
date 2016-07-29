@@ -32,14 +32,15 @@ shinyUI(navbarPage("Compare phenotypes among GO categories",
                                 radioButtons("linemeans", "Report line means?",
                                              c("Yes" = "yes",
                                                "No" = "no"), selected = 'no'),
-                                checkboxInput('log', 'Base-10 Log Transform Y-axis?', value = FALSE),
+                                checkboxInput('log', 'Base-10 Log Transform Y-axis?', value = FALSE)
                                 
-                                radioButtons("correct", "Correct for among facility\nvariation using",
-                                             c("Nothing (raw data)" = "none",
-                                               "Means of all plants" = "all",
-                                               "Means of phytometers" = "phyt"
-                                             )
-                                )
+#                               ,                               
+#                                radioButtons("correct", "Correct for among facility\nvariation using",
+#                                             c("Nothing (raw data)" = "none",
+#                                               "Means of all plants" = "all",
+#                                               "Means of phytometers" = "phyt"
+#                                             )
+#                                )
                               ),
                               
                               
