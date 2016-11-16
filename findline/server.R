@@ -1,6 +1,8 @@
 #NEW FINDLINE APP USING METHODS FROM FINEGENE
 
 source("../global.R")
+source('adjust-pheno.R')
+library(ggplot2)
 dbInfo = read.table('../../dbInfo.txt')
 
 #### Define server logic required to summarize and view the selected dataset
@@ -149,7 +151,7 @@ shinyServer(function(input, output, session) {
       df = buildFinalData()
       inputLines = focalLines()
       df <- df[df$line%in%inputLines,]
-      df <- df[!is.na(value),]
+      df <- df[!is.na(df$value),]
       write.csv(file=file,df)
     }
   )

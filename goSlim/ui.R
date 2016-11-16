@@ -1,8 +1,7 @@
 #Partial Authorship by Nick Levitt
-source("../global.R")
-library(ggplot2)
-library(RColorBrewer)
 
+source("../global.R")
+library(RColorBrewer)
 dbInfo = read.table('../../dbInfo.txt')
 con <- dbConnect(MySQL(),dbname=toString(dbInfo[[1]]),user=toString(dbInfo[[2]]),password=toString(dbInfo[[3]]))
 #get unique slims
