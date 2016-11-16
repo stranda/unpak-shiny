@@ -7,14 +7,14 @@
 options(max.print=100)
 library(shiny)
 source("global.R")
-source("adjust-pheno.R")
+source("CG-adjust-pheno.R")
 library(ggplot2)
 dbInfo = read.table('dbInfo.txt')
 
 CONSERVEDGROUPSQUERY <- "SELECT DISTINCT IndependentDataCache.ConservedGroup FROM IndependentDataCache"
 PHENOTYPETABLESQUERY <- "SELECT * FROM Phenotype"
 EXPERIMENTQUERY <- "SELECT DISTINCT Experiment.name FROM Experiment"
-GENERALDATAQUERY <- paste ('SELECT IDC.id AS "PlantID", IP.Accession_idAccession AS "Accession", IDC.ConservedGroup, E.name AS "Expt",F.name AS Facility,T.name AS "Treatment", P.name AS "Phenotype", O.value AS "Value"',
+GENERALDATAQUERY <- paste ('SELECT IDC.id AS "PlantID", IP.Accession_idAccession AS "Accession", IDC.ConservedGroup, E.name AS "Expt",F.name AS "Facility",T.name AS "Treatment", P.name AS "Phenotype", O.value AS "Value"',
                            'FROM IndependentDataCache IDC',
                              'JOIN IndividualPlant IP',
                               'ON IDC.id = IP.idIndividualPlant',
@@ -70,14 +70,36 @@ shinyServer(function(input, output,session) {
                    selected = availPhenotypes[1],
                    multiple = TRUE))
   
-  #Plot data on boxplots (Reactive)
-  output$graph <- renderPlot({
-    df = allData
+  #Prepare data according to user input 
+  buildFinalData = function() {
+    df <- allData
     
-    df = df[which(df$Phenotype == input$pheno),]
+    #Chosen experiment
     if(input$expt != "All"){
       df = df[which(df$Expt == input$expt), ]
-    }    
+    } 
+    
+    #Chosen phenotypes
+    df = df[which(df$Phenotype == input$pheno),]
+    
+    #Ignroe NAs
+    df <- df[!is.na(df$Value),] 
+    
+    #Chosen correction type
+    if(input$correct == "phyt") df = phytcorrect(df, input$pheno, c("Expt","Facility","Treatment", "ConservedGroup"), 'Accession')
+    if(input$correct == "all") df  =  allcorrect(df, input$pheno, c("Expt","Facility","Treatment", "ConservedGroup"), 'Accession')
+    
+    #Chosen report line means 
+    if (input$linemeans == 'yes') { 
+      df <- df%>%group_by(Accession,Expt,Treatment,Phenotype, ConservedGroup)%>%summarise(Value=mean(Value,na.rm=T))
+    }
+    return(df)    
+  }
+  
+  
+  #Plot data on boxplots (Reactive)
+  output$graph <- renderPlot({
+    df = buildFinalData()
     
     p <- ggplot(df,aes(ConservedGroup, Value))
     
