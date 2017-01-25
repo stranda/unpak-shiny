@@ -139,7 +139,7 @@ output$treat = renderUI({
   }
   poss = unique(df$Treatment)
   selectInput("treat", "Choose a treatment:", 
-              choices = c("All",sort(poss))) 
+              choices = c(sort(poss),"All"),selected="control") 
 })
 
 # Renders the error message if the combination of phenotype/line/experiment does not exist in the DB, 

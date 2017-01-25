@@ -116,7 +116,7 @@ shinyServer(function(input, output,session) {
     }
       poss = unique(df$Treatment)
       selectInput("treats", "Choose a treatment:", 
-                  choices = c("All",sort(poss))) 
+                  choices = c(sort(poss),"All"), selected="control") 
   }) 
 
 buildHist = function(df, select) {

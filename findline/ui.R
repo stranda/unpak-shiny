@@ -11,11 +11,13 @@ shinyUI(
                           textInput("line", "Enter an accession:", "CS70000"),
                           textInput("line2", "Enter a second accession:", ""),
                           uiOutput('phenos'),
+                          checkboxInput("scale","Scale phenotypes by StdDev within Growth Chamber",FALSE),
                           radioButtons("linemeans", "Report line means?",
                                        c("Yes" = "yes",
                                          "No" = "no"), selected = 'no'),
                           radioButtons("correct", "Correct for among facility\nvariation using",
                                        c("Nothing (raw data)" = "none",
+                                         "Means of Columbia" = "col",
                                          "Means of all plants" = "all",
                                          "Means of phytometers" = "phyt"
                                        )

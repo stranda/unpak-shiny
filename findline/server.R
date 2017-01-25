@@ -55,7 +55,19 @@ shinyServer(function(input, output, session) {
   
   focalLines <- reactive({
     con = dbConnect(MySQL(),dbname=toString(dbInfo[[1]]),user=toString(dbInfo[[2]]),password=toString(dbInfo[[3]]))
-    lines <- unique(unlist(c(dbGetQuery(con,paste("SELECT Accession_idAccession FROM GeneAccession WHERE Accession_idAccession='",input$line,"' or Accession_idAccession='",input$line2,"'",sep="")))))
+    query = paste("SELECT idAccession FROM Accession")
+### WHERE Accession_idAccession='",input$line,"' or Accession_idAccession='",input$line2,"'",sep="")
+    acc <- unique(unlist(c(dbGetQuery(con,query))))
+    lines=c(input$line,input$line2)[which(c(input$line,input$line2) %in% acc)]
+    print("in focalLines")
+    
+    print(query)
+print(length(acc))
+    print(str(acc))
+    print(c(input$line,input$line2))
+    print(lines)
+    print(acc[acc=="SALK_024526C"])
+    print("that was the 'lines' variable")
     cons<-dbListConnections(MySQL())
     for(con in cons)
       dbDisconnect(con) 
@@ -106,12 +118,21 @@ shinyServer(function(input, output, session) {
   buildFinalData = function() {
     
     df <- allData()
+      print(names(df))
     df <- df[df$phenotype %in% input$phenos,]
     df <- df[!is.na(df$value),] #don't mess with NAs
-    
-    if (input$correct == "phyt")  df = phytcorrect(df, input$phenos, c("experiment","facility","treatment"), 'line')
-    if (input$correct == "all")  df  =  allcorrect(df, input$phenos, c("experiment","facility","treatment"), 'line')
-    
+    names(df)[which(names(df)=="phenotype")]="variable"
+    df$meta.experiment=df$experiment
+      if (input$scale==TRUE)
+          df = adjustPhenotypes::scalePhenos(df, classifier=c("experiment","facility","treatment"), lineid='line')
+    if (input$correct == "phyt")
+            df = adjustPhenotypes::phytcorrect(df, input$phenos, c("experiment","facility","treatment"), 'line')
+    if (input$correct == "all")
+        df  =  adjustPhenotypes::allcorrect(df, input$phenos, c("experiment","facility","treatment"), 'line')
+    if (input$correct == "col")
+        df  =  adjustPhenotypes::colcorrect(df, input$phenos, c("experiment","facility","treatment"), 'line')
+    names(df)[which(names(df)=="variable")]="phenotype"
+              
     if (input$linemeans == 'yes') { #get means per line instead of actual observations
       df <- df%>%group_by(line,experiment,treatment,phenotype)%>%summarise(value=mean(value,na.rm=T))
     }
@@ -123,7 +144,10 @@ shinyServer(function(input, output, session) {
     df <- buildFinalData()
     linedf = df[df$line %in% focalLines(),]
     lineSub <- unique(linedf[,c("experiment","phenotype","treatment")])
+    print(focalLines())
     df <- merge(df,lineSub,all.x=F)
+    print(dim(df))
+    print(names(df))
     ggplot(data = df, aes(value, fill = treatment)) + 
       geom_histogram() +
       scale_colour_brewer(type="qual", palette=8) +

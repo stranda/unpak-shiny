@@ -62,8 +62,10 @@ shinyServer(function(input, output, session) {
     }
     df <- df[!is.na(df$value),] #don't mess with NAs
     
-    if (input$correct == "phyt")  df = phytcorrect(df, input$phenos, c("experiment","facility","treatment"), 'line')
-    if (input$correct == "all")  df  =  allcorrect(df, input$phenos, c("experiment","facility","treatment"), 'line')
+
+#    if (input$correct == "phyt")  df = phytcorrect(df, input$phenos, c("experiment","facility","treatment", "slim"), 'line')
+#    if (input$correct == "all")  df  =  allcorrect(df, input$phenos, c("experiment","facility","treatment"), 'line')
+
     
     if (input$linemeans == 'yes') { #get means per line instead of actual observations
       df <- df%>%group_by(line,experiment,treatment,phenotype, slim)%>%summarise(value=mean(value,na.rm=T))
