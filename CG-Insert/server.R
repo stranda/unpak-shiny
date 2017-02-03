@@ -39,11 +39,13 @@ shinyServer(function(input, output, session) {
     }
   })
   
+  #Show a pop-up message describing what "Conserved Groups" are
   observeEvent(input$action1, {
     session$sendCustomMessage(type = 'alertMessage',
                               message = 'Conserved Groups message')
   })
   
+  #Show a pop-up message describing what "Insert Locations" are
   observeEvent(input$action2, {
     session$sendCustomMessage(type = 'alertMessage',
                               message = 'Insertion Location message')
