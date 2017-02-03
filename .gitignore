@@ -2,3 +2,5 @@
 /findline.ss/server.R~
 /goSlim/server.R~
 /slimPull.R~
+*.Rproj
+*.Rhistory

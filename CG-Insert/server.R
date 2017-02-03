@@ -24,11 +24,12 @@ shinyServer(function(input, output, session) {
   #Get database connection
   dbInfo = read.table('dbInfo.txt')
  
-  group <- c(dbname = toString(dbInfo[[1]]),
-    user = toString(dbInfo[[2]]),
-    password = toString(dbInfo[[3]]))
+  # group <- c(dbname=toString(dbInfo[[1]]),
+  #   user=toString(dbInfo[[2]]),
+  #   password=toString(dbInfo[[3]]))
+  # 
+  # con <- getConnection(group)
   
- ############## con <- getConnection(group)
   con = dbConnect(MySQL(),
                   dbname=toString(dbInfo[[1]]),
                   user=toString(dbInfo[[2]]),
@@ -44,6 +45,17 @@ shinyServer(function(input, output, session) {
       data.frame(dbGetQuery(con, getInsertData()))
     }
   })
+  
+  observeEvent(input$action1, {
+    session$sendCustomMessage(type = 'alertMessage',
+                              message = 'Conserved Groups message')
+  })
+  
+  observeEvent(input$action2, {
+    session$sendCustomMessage(type = 'alertMessage',
+                              message = 'Insertion Location message')
+  })
+  
   
   #Query phenotypes
   phenosTable <- dbGetQuery(con, PHENOTYPETABLESQUERY)
