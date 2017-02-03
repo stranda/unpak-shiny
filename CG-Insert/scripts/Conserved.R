@@ -1,7 +1,7 @@
 ##ConservedGroup Server
 
 getConservedData <- function(){
-  return(paste ('SELECT IDC.id AS "PlantID", IP.Accession_idAccession AS "Accession", IDC.ConservedGroup, E.name AS "Expt",F.name AS "Facility",T.name AS "Treatment", P.name AS "Phenotype", O.value AS "Value"',
+  return(paste ('SELECT IDC.id AS "PlantID", IP.Accession_idAccession AS "Accession", IDC.ConservedGroup, E.name AS "Expt",F.name AS "Facility",T.name AS "Treatment", P.name AS "phenotype", O.value AS "value"',
                 'FROM IndependentDataCache IDC',
                 'JOIN IndividualPlant IP',
                 'ON IDC.id = IP.idIndividualPlant',

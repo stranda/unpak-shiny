@@ -4,11 +4,7 @@ library(unpakR)
 library(reshape)
 library(RMySQL)
 library(dplyr)
-library(adjustPhenotypes)
 library(ggplot2)
-
-# options(bitmapType='cairo')
-type <- getOption("bitmapType")
 
 makeHTMLtable <- function (df,session) {
   url.root = paste0(sep = '',"http://",session$clientData$url_hostname,":",
@@ -38,10 +34,16 @@ phenotypes.to.exclude <- c("FruitLength1","FruitLength2","FruitLength3","FruitLe
 
 getConnection <- function(group) {
   if (!exists('.connection', where=.GlobalEnv)) {
-    .connection <<- dbConnect(MySQL(), group=group)
+    .connection <<- dbConnect(MySQL(),
+                              dbname=toString(group[1]),
+                              user=toString(group[2]),
+                              password=toString(group[3]))
   } else if (class(try(dbGetQuery(.connection, "SELECT 1"))) == "try-error") {
     dbDisconnect(.connection)
-    .connection <<- dbConnect(MySQL(), group=group)
+    .connection <<- dbConnect(MySQL(),
+                              dbname=toString(group[1]),
+                              user=toString(group[2]),
+                              password=toString(group[3]))
   }  
   return(.connection)
 }
