@@ -20,6 +20,7 @@ shinyServer(function(input, output, session) {
   PHENOTYPETABLESQUERY <- "SELECT * FROM Phenotype"
   
   #Get database connection
+  print(getwd())
   dbInfo = read.table('dbInfo.txt')
  
   group <- c(dbname=toString(dbInfo[[1]]),

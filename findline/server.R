@@ -1,7 +1,7 @@
 #NEW FINDLINE APP USING METHODS FROM FINEGENE
 
 source("../global.R")
-source('adjust-pheno.R')
+#source('adjust-pheno.R')
 library(ggplot2)
 dbInfo = read.table('../../dbInfo.txt')
 
@@ -34,6 +34,7 @@ shinyServer(function(input, output, session) {
     {
       ret <- obstbl
       ret <- ret[complete.cases(ret),]
+      ret$line <- ifelse(ret$line%in%c("COL70000","SALK_CS60000","CS70000"),"CS70000",ret$line)
     } else {
       ret <- NULL
     }
@@ -152,7 +153,7 @@ print(length(acc))
       geom_histogram() +
       scale_colour_brewer(type="qual", palette=8) +
       geom_vline(data = linedf, aes(xintercept = value, color = line), linetype = 'solid', show_guide = T) +
-      facet_wrap(~ phenotype + experiment + treatment, scales = 'free', ncol = 1)
+      facet_wrap(~ phenotype + experiment + treatment, scales = 'free')
   })
   
   
