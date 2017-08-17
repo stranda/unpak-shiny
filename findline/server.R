@@ -1,7 +1,7 @@
 #NEW FINDLINE APP USING METHODS FROM FINEGENE
 
 source("../global.R")
-source('adjust-pheno.R')
+#source('adjust-pheno.R')
 library(ggplot2)
 dbInfo = read.table('../../dbInfo.txt')
 
@@ -123,18 +123,20 @@ print(length(acc))
     df <- df[!is.na(df$value),] #don't mess with NAs
     names(df)[which(names(df)=="phenotype")]="variable"
     df$meta.experiment=df$experiment
-      if (input$scale==TRUE)
-          df = adjustPhenotypes::scalePhenos(df, classifier=c("experiment","facility","treatment"), lineid='line')
-    if (input$correct == "phyt")
-            df = adjustPhenotypes::phytcorrect(df, input$phenos, c("experiment","facility","treatment"), 'line')
+       if (input$correct == "phyt")
+            df = adjustPhenotypes::phytcorrect(df, input$phenos, c("experiment","facility","block"), 'line')
     if (input$correct == "all")
-        df  =  adjustPhenotypes::allcorrect(df, input$phenos, c("experiment","facility","treatment"), 'line')
+        df  =  adjustPhenotypes::allcorrect(df, input$phenos, c("experiment","facility","block"), 'line')
     if (input$correct == "col")
-        df  =  adjustPhenotypes::colcorrect(df, input$phenos, c("experiment","facility","treatment"), 'line')
+        df  =  adjustPhenotypes::colcorrect(df, input$phenos, c("experiment","facility","block"), 'line')
+    
+    if (input$scale==TRUE)
+      df = adjustPhenotypes::scalePhenos(df, classifier=c("experiment","facility","block"), lineid='line')
+    
     names(df)[which(names(df)=="variable")]="phenotype"
-              
+    
     if (input$linemeans == 'yes') { #get means per line instead of actual observations
-      df <- df%>%group_by(line,experiment,treatment,phenotype)%>%summarise(value=mean(value,na.rm=T))
+      df <- df%>%group_by(line,experiment,facility,phenotype)%>%summarise(value=mean(value,na.rm=T))
     }
     df    
   }
@@ -148,11 +150,23 @@ print(length(acc))
     df <- merge(df,lineSub,all.x=F)
     print(dim(df))
     print(names(df))
-    ggplot(data = df, aes(value, fill = treatment)) + 
-      geom_histogram() +
-      scale_colour_brewer(type="qual", palette=8) +
-      geom_vline(data = linedf, aes(xintercept = value, color = line), linetype = 'solid', show_guide = T) +
-      facet_wrap(~ phenotype + experiment + treatment, scales = 'free', ncol = 1)
+    if (input$collapse=="yes")
+      {
+      ggplot(data = df, aes(value, fill = treatment)) + 
+        geom_histogram() +
+        scale_colour_brewer(type="qual", palette=8) +
+        geom_vline(data = linedf, aes(xintercept = value, color = line), linetype = 'solid', show_guide = T) +
+        facet_wrap(~ phenotype + treatment, scales = 'free', ncol = 1)
+    }
+    else
+    {
+      ggplot(data = df, aes(value, fill = treatment)) + 
+        geom_histogram() +
+        scale_colour_brewer(type="qual", palette=8) +
+        geom_vline(data = linedf, aes(xintercept = value, color = line), linetype = 'solid', show_guide = T) +
+        facet_wrap(~ phenotype + experiment + treatment, scales = 'free', ncol = 1)
+    }
+  }
   })
   
   
