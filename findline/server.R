@@ -34,6 +34,7 @@ shinyServer(function(input, output, session) {
     {
       ret <- obstbl
       ret <- ret[complete.cases(ret),]
+      ret$line <- ifelse(ret$line%in%c("COL70000","SALK_CS60000","CS70000"),"CS70000",ret$line)
     } else {
       ret <- NULL
     }

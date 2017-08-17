@@ -13,10 +13,18 @@ shinyUI(fluidPage(
   # Application inputs/outputs
   sidebarLayout(
     sidebarPanel(
-      shiny::radioButtons("dataType",
-                          label = "Choose the Type of Data",
-                          choices = c("Conserved Groups","Insert Location"),
-                          selected = "Conserved Groups"), 
+      tags$head(tags$script(src = "alert.js")),
+      
+      div(style="display:inline-block",
+          radioButtons("dataType",
+                       label = "Choose the Type of Data",
+                       choices = c("Conserved Groups","Insert Location"),
+                       selected = "Conserved Groups")),
+      
+      div(style="display:inline-block",
+          actionLink("action1", label = "Conserved Groups?"),
+          div(actionLink("action2", label = "Insert Location?"))),
+      
       
       shiny::uiOutput('phenotypesBox'),
       shiny::uiOutput('experimentsBox'),
