@@ -167,7 +167,6 @@ print(length(acc))
         geom_vline(data = linedf, aes(xintercept = value, color = line), linetype = 'solid', show_guide = T) +
         facet_wrap(~ phenotype + experiment + treatment, scales = 'free', ncol = 1)
     }
-  }
   })
   
   
