@@ -124,20 +124,29 @@ print(length(acc))
     df <- df[!is.na(df$value),] #don't mess with NAs
     names(df)[which(names(df)=="phenotype")]="variable"
     df$meta.experiment=df$experiment
-       if (input$correct == "phyt")
-            df = adjustPhenotypes::phytcorrect(df, input$phenos, c("experiment","facility","block"), 'line')
+
+    if (input$correct == "phyt")
+    {
+        df = adjustPhenotypes::phytcorrect(df, pheno=input$phenos, c("experiment","facility"), lineid='line')
+        print("made it past phytcorrect")
+        }
     if (input$correct == "all")
-        df  =  adjustPhenotypes::allcorrect(df, input$phenos, c("experiment","facility","block"), 'line')
+        df  =  adjustPhenotypes::allcorrect(df, pheno=input$phenos, c("experiment","facility"), lineid='line')
     if (input$correct == "col")
-        df  =  adjustPhenotypes::colcorrect(df, input$phenos, c("experiment","facility","block"), 'line')
+        df  =  adjustPhenotypes::colcorrect(df, pheno=input$phenos, c("experiment","facility"), lineid='line')
     
     if (input$scale==TRUE)
-      df = adjustPhenotypes::scalePhenos(df, classifier=c("experiment","facility","block"), lineid='line')
+      df = adjustPhenotypes::scalePhenos(df, classifier=c("experiment","facility"), lineid='line')
     
     names(df)[which(names(df)=="variable")]="phenotype"
     
     if (input$linemeans == 'yes') { #get means per line instead of actual observations
-      df <- df%>%group_by(line,experiment,facility,phenotype)%>%summarise(value=mean(value,na.rm=T))
+        if (input$collapse=="yes")
+        {
+            df <- df%>%group_by(line,experiment,phenotype)%>%summarise(value=mean(value,na.rm=T))
+        } else {
+            df <- df%>%group_by(line,experiment,facility,phenotype)%>%summarise(value=mean(value,na.rm=T))
+            }
     }
     df    
   }
@@ -146,26 +155,26 @@ print(length(acc))
   output$hist = renderPlot({
     df <- buildFinalData()
     linedf = df[df$line %in% focalLines(),]
-    lineSub <- unique(linedf[,c("experiment","phenotype","treatment")])
+    lineSub <- unique(linedf[,c("experiment","phenotype")])
     print(focalLines())
     df <- merge(df,lineSub,all.x=F)
     print(dim(df))
     print(names(df))
     if (input$collapse=="yes")
       {
-      ggplot(data = df, aes(value, fill = treatment)) + 
+      ggplot(data = df, aes(value)) + 
         geom_histogram() +
         scale_colour_brewer(type="qual", palette=8) +
         geom_vline(data = linedf, aes(xintercept = value, color = line), linetype = 'solid', show_guide = T) +
-        facet_wrap(~ phenotype + treatment, scales = 'free', ncol = 1)
+        facet_wrap(~ phenotype , scales = 'free')
     }
     else
     {
-      ggplot(data = df, aes(value, fill = treatment)) + 
+      ggplot(data = df, aes(value)) + 
         geom_histogram() +
         scale_colour_brewer(type="qual", palette=8) +
         geom_vline(data = linedf, aes(xintercept = value, color = line), linetype = 'solid', show_guide = T) +
-        facet_wrap(~ phenotype + experiment + treatment, scales = 'free', ncol = 1)
+        facet_wrap(~ phenotype + experiment , scales = 'free')
     }
   })
   
